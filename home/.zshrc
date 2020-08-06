@@ -10,6 +10,21 @@ alias ls="ls -GFh"
 alias l="ls -a"
 alias ll="ls -al"
 
+# Load plugins
+autoload -Uz colors
+autoload -Uz compinit
+autoload -Uz promptinit
+compinit
+colors
+promptinit
+prompt adam1
+
+# allow tab completion in the middle of a word
+setopt COMPLETE_IN_WORD
+
+# Use emacs keybindings even if our EDITOR is set to vi
+bindkey -e
+
 # history
 setopt APPEND_HISTORY
 setopt HIST_IGNORE_DUPS
