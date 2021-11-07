@@ -144,6 +144,7 @@ sync_gui() {
     apt_install "alsamixer"
     apt_install "volumeicon-alsa"
     apt_install "ulauncher"
+    apt_install "cbatticon"
 
     confirm "I'm going to install the desktop environment."
 
