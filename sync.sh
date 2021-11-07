@@ -14,7 +14,7 @@ is_command() {
 }
 
 require_command() {
-    if [ "$(is_command "$1")" == "1" ]; then
+    if [ "$(is_command "$1")" == "0" ]; then
         echo "Couldn't find $1 on your system. I cannot continue..."
         exit 1
     fi
