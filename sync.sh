@@ -7,24 +7,24 @@ workdir="$(mktemp -d)"
 echo "The temp working directory will be $workdir"
 
 is_command() {
-    if ! [ -x "$(command -v "$1")" ]; then
+    if [ -x "$(command -v "$1")" ]; then
         return 1
     fi
     return 0
 }
 
 require_command() {
-    if [ "$(is_command "$1")" == "1" ]; then
+    if [ "$(is_command "$1")" -eq "1" ]; then
         echo "Couldn't find $1 on your system. I cannot continue..."
         exit 1
     fi
 }
 
-if [ "$(is_command "apt")" == "1" ]; then
+if [ "$(is_command "apt")" -eq "1" ]; then
     os_pkg_manager="apt"
 fi
 
-if [ "$(is_command "yum")" == "1" ]; then
+if [ "$(is_command "yum")" -eq "1" ]; then
     os_pkg_manager="yum"
 fi
 
@@ -43,10 +43,10 @@ confirm() {
 }
 
 apt_install() {
-    if [ "$(is_command "$1")" == "1" ]; then
+    if [ "$(is_command "$1")" -eq "1" ]; then
         return
     fi
-    if [ "$os_pkg_manager" != "apt" ]; then
+    if ! [ "$os_pkg_manager" -eq "apt" ]; then
         return
     fi
     echo "Couldn't find $1. I'll try to install it..."
@@ -54,10 +54,10 @@ apt_install() {
 }
 
 yum_install() {
-    if [ "$(is_command "$1")" == "1" ]; then
+    if [ "$(is_command "$1")" -eq "1" ]; then
         return
     fi
-    if [ "$os_pkg_manager" != "yum" ]; then
+    if ! [ "$os_pkg_manager" -eq "yum" ]; then
         return
     fi
     echo "Couldn't find $1. I'll try to install it..."
@@ -90,7 +90,7 @@ sync_shell() {
     "$workdir/install.sh" "" "--unattended"
     curl -sSLo "$HOME/.zshrc" "$dotfiles_url/home/.zshrc"
 
-    if [ "$(basename "$SHELL")" != "zsh" ]; then
+    if ! [ "$(basename "$SHELL")" -eq "zsh" ]; then
         echo "The current shell does not seem like zsh. I can fix that..."
         echo "You'll probably have to provide a password :("
         chsh -s "$(which zsh)"
@@ -184,13 +184,14 @@ sync_gui() {
     curl -sSLo "$HOME/.Xresources" "$dotfiles_url/home/.Xresources"
 }
 
-if [ "$(sudo -n true)" == "0" ]; then
+if [ "$(sudo -n true)" -eq "0" ]; then
     echo "You aren't able to run commands as root right now."
     echo "I need you to provide your password upfront to save time later."
     sudo -v
     echo "OK. Let's start..."
 fi
 
+require_command "finger"
 require_command "curl"
 sync_shell
 sync_git
