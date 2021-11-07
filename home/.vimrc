@@ -4,7 +4,6 @@ set encoding=utf-8
 let g:vimspector_enable_mappings = 'HUMAN'
 
 call plug#begin('~/.vim/plugged')
-Plug 'morhetz/gruvbox'
 Plug 'itchyny/lightline.vim'
 Plug 'preservim/nerdtree'
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
