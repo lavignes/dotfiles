@@ -174,6 +174,7 @@ sync_gui() {
         --create-dirs "$dotfiles_url/home/.config/qtile/config.py"
     curl -sSLo "$HOME/.config/qtile/autostart.sh" \
         --create-dirs "$dotfiles_url/home/.config/qtile/autostart.sh"
+    chmod +x "$dotfiles_url/home/.config/qtile/autostart.sh"
    
     rm -rf "$HOME/.config/volumeicon"
     curl -sSLo "$HOME/.config/volumeicon/volumeicon" \
