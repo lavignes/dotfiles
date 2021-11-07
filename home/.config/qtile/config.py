@@ -124,6 +124,13 @@ screens = [
                     background=colors['info'][1],
                     foreground=colors['foreground'][0],
                 ),
+                widget.Notify(
+                    foreground_low=colors['debug'][0],
+                    foreground_high=colors['warn'][0],
+                    foreground_urgent=colors['error'][0],
+                    foreground=colors['foreground'][0],
+                    max_chars=40,
+                ),
                 widget.Systray(
                     icon_size=24,
                 ),
