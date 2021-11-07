@@ -167,15 +167,15 @@ sync_gui() {
     
     rm -rf "$HOME/.config/qtile"
     pip install dbus-next
-    pip install cairocffi
     pip install xcffib
+    pip install cairocffi
     git clone "git://github.com/qtile/qtile.git" "$workdir/qtile"
     pip install "$workdir/qtile"
     curl -sSLo "$HOME/.config/qtile/config.py" \
         --create-dirs "$dotfiles_url/home/.config/qtile/config.py"
     curl -sSLo "$HOME/.config/qtile/autostart.sh" \
         --create-dirs "$dotfiles_url/home/.config/qtile/autostart.sh"
-    chmod +x "$dotfiles_url/home/.config/qtile/autostart.sh"
+    chmod +x "$HOME/.config/qtile/autostart.sh"
    
     rm -rf "$HOME/.config/volumeicon"
     curl -sSLo "$HOME/.config/volumeicon/volumeicon" \
