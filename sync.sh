@@ -131,6 +131,7 @@ sync_gui() {
     confirm "All the basic stuff is done. I can now setup the gui."
 
     sudo add-apt-repository -y ppa:papirus/papirus
+    sudo add-apt-repository -y ppa:agornostal/ulauncher
     sudo apt update
     
     apt_install "libxcb-render0-dev"
@@ -172,7 +173,7 @@ sync_gui() {
   
     sudo rm -f /usr/share/xsessions/qtile.desktop
     curl -sSLo /usr/share/xsessions/qtile.desktop \
-        --create-dirs /usr/share/xsessions/qtile.desktop
+        --create-dirs "$dotfiles_url/usr/share/xsessions/qtile.desktop"
 
     rm -rf "$HOME/.config/volumeicon"
     curl -sSLo "$HOME/.config/volumeicon/volumeicon" \
