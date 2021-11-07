@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
@@ -23,7 +23,8 @@ fi
 
 confirm() {
     echo "$1" 
-    read -rp "Is this ok (y/n)?" choice
+    echo "Is this ok (y/n)?"
+    read -r choice
     case "$choice" in 
         y|yes|Y)
             ;;
