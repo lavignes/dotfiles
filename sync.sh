@@ -176,7 +176,11 @@ sync_gui() {
     curl -sSLo "$HOME/.config/qtile/autostart.sh" \
         --create-dirs "$dotfiles_url/home/.config/qtile/autostart.sh"
     chmod +x "$HOME/.config/qtile/autostart.sh"
-   
+  
+    sudo rm -f /usr/share/xsessions/qtile.desktop
+    curl -sSLo /usr/share/xsessions/qtile.desktop \
+        --create-dirs /usr/share/xsessions/qtile.desktop
+
     rm -rf "$HOME/.config/volumeicon"
     curl -sSLo "$HOME/.config/volumeicon/volumeicon" \
         --create-dirs "$dotfiles_url/home/.config/volumeicon/volumeicon"
