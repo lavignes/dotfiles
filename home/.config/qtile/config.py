@@ -39,7 +39,7 @@ keys = [
         desc='Grow window'),
     Key([mod], 'o', lazy.layout.shrink(),
         desc='Shrink window'),
-    Key([mod], 'n', lazy.layout.normalize(),
+    Key([mod], 'n', lazy.layout.reset(),
         desc='Reset all window sizes'),
 
     Key([mod], 'Return', lazy.spawn(terminal),
