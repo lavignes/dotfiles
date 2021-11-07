@@ -191,7 +191,6 @@ if [ "$(sudo -n true)" == "0" ]; then
     echo "OK. Let's start..."
 fi
 
-require_command "finger"
 require_command "curl"
 sync_git
 sync_shell
