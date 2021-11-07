@@ -7,7 +7,7 @@ workdir="$(mktemp -d)"
 echo "The temp working directory will be $workdir"
 
 is_command() {
-    if ! [ -x "$(command -v "$1")" ]; then
+    if [ -x "$(command -v "$1")" ]; then
         return 1
     fi
     return 0
@@ -46,7 +46,7 @@ apt_install() {
     if [ "$(is_command "$1")" == "1" ]; then
         return
     fi
-    if [ "$os_pkg_manager" == "apt" ]; then
+    if [ "$os_pkg_manager" != "apt" ]; then
         return
     fi
     echo "Couldn't find $1. I'll try to install it..."
@@ -57,7 +57,7 @@ yum_install() {
     if [ "$(is_command "$1")" == "1" ]; then
         return
     fi
-    if ! [ "$os_pkg_manager" == "yum" ]; then
+    if [ "$os_pkg_manager" != "yum" ]; then
         return
     fi
     echo "Couldn't find $1. I'll try to install it..."
