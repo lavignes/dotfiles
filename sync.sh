@@ -7,7 +7,7 @@ workdir="$(mktemp -d)"
 echo "The temp working directory will be $workdir"
 
 is_command() {
-    if [ -x "$(command -v "$1")" ]; then
+    if ! [ -x "$(command -v "$1")" ]; then
         return 1
     fi
     return 0
