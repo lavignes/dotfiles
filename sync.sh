@@ -72,7 +72,7 @@ sync_git() {
     confirm "I will now replace your git configuration."
     
     rm -f "$HOME/.gitconfig"
-    curl -Lo "$HOME/.gitconfig" "$dotfiles_url/home/.gitconfig"
+    curl -sSLo "$HOME/.gitconfig" "$dotfiles_url/home/.gitconfig"
 }
 
 sync_shell() {
@@ -85,8 +85,10 @@ sync_shell() {
     rm -rf "$HOME/.oh-my-zsh" 
     rm -f "$HOME/.zshrc"
 
-    eval "$(curl -L "https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh")"
-    curl -Lo "$HOME/.zshrc" "$dotfiles_url/home/.zshrc"
+    curl -sSLo "$workdir/install.sh" "https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
+    chmod +x "$workdir/install.sh"
+    "$workdir/install.sh" "" "--unattended"
+    curl -sSLo "$HOME/.zshrc" "$dotfiles_url/home/.zshrc"
 
     if [ "$(basename "$SHELL")" != "zsh" ]; then
         echo "The current shell does not seem like zsh. I can fix that..."
@@ -98,7 +100,7 @@ sync_shell() {
 sync_node() {
     confirm "I will now install nvm and update to the latest nodejs."
     
-    eval "$(curl -L "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh")"
+    eval "$(curl -sSL "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh")"
     NVM_DIR="$HOME/.nvm"
     # shellcheck source=/dev/null
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
@@ -116,21 +118,24 @@ sync_vim() {
     rm -rf "$HOME/.vim"
     rm -f "$HOME/.vimrc"
 
-    curl -Lo "$HOME/.vimrc" "$dotfiles_url/home/.vimrc"
-    curl -Lo "$HOME/.vim/autoload/plug.vim" --create-dirs \
+    curl -sSLo "$HOME/.vimrc" "$dotfiles_url/home/.vimrc"
+    curl -sSLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
         "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
 
     echo "This will look weird. But in 5 seconds I will start vim and set it up."
     echo "Don't worry, it will close right afterward..."
     sleep 5
-    vim -c ":PlugInstall" -c ":PlugUpdate" -c ":qall\!"
+    vim -c ":PlugInstall" -c ":qall!"
+    vim -c ":CocInstall -sync coc-rust-analyzer" -c ":qall!"
 }
 
 sync_gui() {
     if [ -z "$XDG_SESSION_TYPE" ]; then
-        echo "I don't think you have a gui. Exiting..."
-        exit 1
+        echo "I don't think you have a gui..."
+        return 
     fi
+
+    confirm "All the basic stuff is done. I can now setup the gui."
 
     sudo add-apt-repository -y ppa:papirus/papirus
     sudo apt update
@@ -145,18 +150,18 @@ sync_gui() {
     apt_install "volumeicon-alsa"
     apt_install "ulauncher"
 
-    confirm "I'm going to install the desktop and themes."
+    confirm "I'm going to install the desktop environment."
 
     rm -rf "$HOME/.themes/Nordic-darker"
-    curl -Lo "$workdir/Nordic-darker.tar.xz" "https://github.com/EliverLara/Nordic/releases/download/2.0.0/Nordic-darker.tar.xz"
+    curl -sSLo "$workdir/Nordic-darker.tar.xz" "https://github.com/EliverLara/Nordic/releases/download/2.0.0/Nordic-darker.tar.xz"
     mkdir -p "$HOME/.themes"
     tar xf "$workdir/Nordic-darker.tar.xz" -C "$HOME/.themes"
 
     rm -f "$HOME/.config/gtk-2.0/settings.ini"
     rm -f "$HOME/.config/gtk-3.0/settings.ini"
-    curl -Lo "$HOME/.config/gtk-2.0/settings.ini" \
+    curl -sSLo "$HOME/.config/gtk-2.0/settings.ini" \
         --create-dirs "$dotfiles_url/home/.config/gtk-2.0/settings.ini"
-    curl -Lo "$HOME/.config/gtk-3.0/settings.ini" \
+    curl -sSLo "$HOME/.config/gtk-3.0/settings.ini" \
         --create-dirs "$dotfiles_url/home/.config/gtk-3.0/settings.ini"
     
     rm -rf "$HOME/.config/qtile"
@@ -165,17 +170,17 @@ sync_gui() {
     pip install xcffib
     git clone "git://github.com/qtile/qtile.git" "$workdir/qtile"
     pip install "$workdir/qtile"
-    curl -Lo "$HOME/.config/qtile/config.py" \
+    curl -sSLo "$HOME/.config/qtile/config.py" \
         --create-dirs "$dotfiles_url/home/.config/qtile/config.py"
-    curl -Lo "$HOME/.config/qtile/autostart.sh" \
+    curl -sSLo "$HOME/.config/qtile/autostart.sh" \
         --create-dirs "$dotfiles_url/home/.config/qtile/autostart.sh"
-    
+   
     rm -rf "$HOME/.config/volumeicon"
-    curl -Lo "$HOME/.config/volumeicon/volumeicon" \
+    curl -sSLo "$HOME/.config/volumeicon/volumeicon" \
         --create-dirs "$dotfiles_url/home/.config/volumeicon/volumeicon"
     
-    rm -f "$HOME/home/.Xresources"
-    curl -Lo "$dotfiles_url/home/.Xresources" "$HOME/.Xresources"
+    rm -f "$HOME/.Xresources"
+    curl -sSLo "$HOME/.Xresources" "$dotfiles_url/home/.Xresources"
 }
 
 if [ "$(sudo -n true)" == "0" ]; then
@@ -189,8 +194,6 @@ require_command "curl"
 sync_shell
 sync_git
 sync_vim
-
-confirm "All the basic stuff is done. I can now setup the gui."
 sync_gui
 
-echo "That's it!"
+echo "That's it! You should log out and log back in to qtile."
