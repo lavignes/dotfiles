@@ -193,8 +193,8 @@ fi
 
 require_command "finger"
 require_command "curl"
-sync_shell
 sync_git
+sync_shell
 sync_vim
 sync_gui
 
