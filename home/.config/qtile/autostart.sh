@@ -8,3 +8,7 @@ picom --vsync --shadow \
 nm-applet &
 volumeicon &
 ulauncher --no-window-shadow &
+
+if [ "$(dmidecode --string chassis-type)" == "Laptop" ]; then
+    cbatticon &
+fi
