@@ -140,6 +140,7 @@ sync_gui() {
     apt_install "python3-pip"
 
     apt_install "picom"
+    apt_install "alacritty"
     apt_install "papirus-icon-theme"
     apt_install "network-manager-gnome"
     apt_install "alsamixer"
@@ -180,7 +181,11 @@ sync_gui() {
     rm -rf "$HOME/.config/volumeicon"
     curl -sSLo "$HOME/.config/volumeicon/volumeicon" \
         --create-dirs "$dotfiles_url/home/.config/volumeicon/volumeicon"
-    
+
+    rm -rf "$HOME/.config/alacritty"
+    curl -sSLo "$HOME/.config/alacritty/alacritty.yml" \
+        --create-dirs "$dotfiles_url/home/.config/alacritty/alacritty.yml"
+
     rm -f "$HOME/.Xresources"
     curl -sSLo "$HOME/.Xresources" "$dotfiles_url/home/.Xresources"
 }

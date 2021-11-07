@@ -63,6 +63,7 @@ set updatetime=300
 set nowrap
 set laststatus=2
 set mouse=a
+set ttymouse=sgr
 set modeline
 set backspace=indent,eol,start
 set splitright
