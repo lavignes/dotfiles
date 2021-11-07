@@ -1,5 +1,5 @@
 You know what to do:
 
 ```bash
-$(curl -L https://raw.githubusercontent.com/lavignes/dotfiles/mainline/sync.sh)
+bash -c "$(curl -sSLo- https://raw.githubusercontent.com/lavignes/dotfiles/mainline/sync.sh)"
 ```

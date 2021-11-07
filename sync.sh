@@ -186,7 +186,7 @@ sync_gui() {
 if [ "$(sudo -n true)" == "0" ]; then
     echo "You aren't able to run commands as root right now."
     echo "I need you to provide your password upfront to save time later."
-    sudo true
+    sudo -v
     echo "OK. Let's start..."
 fi
 
