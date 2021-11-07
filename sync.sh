@@ -142,6 +142,7 @@ sync_gui() {
     
     apt_install "libxcb-render0-dev"
     apt_install "libpangocairo-1.0-0"
+    apt_install "python3-pip"
 
     apt_install "picom"
     apt_install "papirus-icon-theme"
