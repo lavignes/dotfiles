@@ -6,25 +6,18 @@ dotfiles_url="https://raw.githubusercontent.com/lavignes/dotfiles/mainline"
 workdir="$(mktemp -d)"
 echo "The temp working directory will be $workdir"
 
-is_command() {
-    if [ -x "$(command -v "$1")" ]; then
-        return 1
-    fi
-    return 0
-}
-
 require_command() {
-    if [ "$(is_command "$1")" == "0" ]; then
+    if ! [ -x "$(command -v "$1")" ]; then
         echo "Couldn't find $1 on your system. I cannot continue..."
         exit 1
     fi
 }
 
-if [ "$(is_command "apt")" == "1" ]; then
+if [ -x "$(command -v "apt")" ]; then
     os_pkg_manager="apt"
 fi
 
-if [ "$(is_command "yum")" == "1" ]; then
+if [ -x "$(command -v "yum")" ]; then
     os_pkg_manager="yum"
 fi
 
@@ -43,7 +36,7 @@ confirm() {
 }
 
 apt_install() {
-    if [ "$(is_command "$1")" == "1" ]; then
+    if [ -x "$(command -v "$1")" ]; then
         return
     fi
     if [ "$os_pkg_manager" != "apt" ]; then
@@ -54,7 +47,7 @@ apt_install() {
 }
 
 yum_install() {
-    if [ "$(is_command "$1")" == "1" ]; then
+    if [ -x "$(command -v "$1")" ]; then
         return
     fi
     if [ "$os_pkg_manager" != "yum" ]; then
@@ -188,13 +181,6 @@ sync_gui() {
     rm -f "$HOME/.Xresources"
     curl -sSLo "$HOME/.Xresources" "$dotfiles_url/home/.Xresources"
 }
-
-if [ "$(sudo -n true)" == "0" ]; then
-    echo "You aren't able to run commands as root right now."
-    echo "I need you to provide your password upfront to save time later."
-    sudo -v
-    echo "OK. Let's start..."
-fi
 
 require_command "curl"
 sync_git
