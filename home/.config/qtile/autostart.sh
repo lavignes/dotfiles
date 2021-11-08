@@ -2,8 +2,7 @@
 
 hsetroot -solid "#696969"
 
-picom --vsync --shadow \
-    --backend xrender --xrender-sync-fence &
+picom --vsync --shadow --backend glx & 
 
 nm-applet &
 volumeicon &
