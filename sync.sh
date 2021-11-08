@@ -157,12 +157,13 @@ install_picom() {
     apt_install "libx11-xcb-dev"
     
     git clone "https://github.com/yshui/picom.git" "$workdir/picom"
-    pushd "$workdir/picom"
+    thisdir = "$(pwd)"
+    cd "$workdir/picom"
     git submodule update --init --recursive
     meson --buildtype=release . build
     ninja -C build
     sudo ninja -C build install
-    popd
+    cd "$thisdir"
 }
 
 install_qtile() {
