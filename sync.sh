@@ -188,6 +188,7 @@ sync_gui() {
 
     sudo add-apt-repository -y ppa:papirus/papirus
     sudo add-apt-repository -y ppa:agornostal/ulauncher
+    sudo add-apt-repository -y ppa:aslatter/ppa
     sudo apt update
     
     install_picom
