@@ -48,6 +48,8 @@ keys = [
         desc='Toggle between layouts'),
     Key([mod], 'w', lazy.window.kill(),
         desc='Kill focused window'),
+    Key([mod, 'control'], 'l',
+        lazy.spawn('i3lock-fancy'), desc='Lock the screen'),
     Key([mod, 'control'], 'r',
         lazy.reload_config(), desc='Reload the config'),
     Key([mod, 'control'], 'q',
