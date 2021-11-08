@@ -123,6 +123,60 @@ sync_vim() {
     vim -c ":CocInstall -sync coc-rust-analyzer" -c ":qall!"
 }
 
+install_picom() {
+    if [ -x "$(command -v "picom")" ]; then
+        return
+    fi
+
+    apt_install "build-essential"
+    apt_install "ninja-build"
+    apt_install "meson"
+
+    apt_install "libxext-dev"
+    apt_install "libxcb1-dev"
+    apt_install "libxcb-damage0-dev"
+    apt_install "libxcb-xfixes0-dev"
+    apt_install "libxcb-shape0-dev"
+    apt_install "libxcb-render-util0-dev"
+    apt_install "libxcb-render0-dev"
+    apt_install "libxcb-randr0-dev"
+    apt_install "libxcb-composite0-dev"
+    apt_install "libxcb-image0-dev"
+    apt_install "libxcb-present-dev"
+    apt_install "libxcb-xinerama0-dev"
+    apt_install "libxcb-glx0-dev"
+    apt_install "libpixman-1-dev"
+    apt_install "libdbus-1-dev"
+    apt_install "libconfig-dev"
+    apt_install "libgl1-mesa-dev"
+    apt_install "libpcre2-dev"
+    apt_install "libpcre3-dev"
+    apt_install "libevdev-dev"
+    apt_install "uthash-dev"
+    apt_install "libev-dev"
+    apt_install "libx11-xcb-dev"
+    
+    git clone "https://github.com/yshui/picom.git" "$workdir/picom"
+    pushd "$workdir/picom"
+    git submodule update --init --recursive
+    meson --buildtype=release . build
+    ninja -C build
+    sudo ninja -C build install
+    popd
+}
+
+install_qtile() {
+    apt_install "libxcb-render0-dev"
+    apt_install "libpangocairo-1.0-0"
+    apt_install "python3-pip"
+    
+    pip install dbus-next
+    pip install xcffib
+    pip install cairocffi
+    git clone "git://github.com/qtile/qtile.git" "$workdir/qtile"
+    pip install "$workdir/qtile"
+}
+
 sync_gui() {
     if [ -z "$XDG_SESSION_TYPE" ]; then
         echo "I don't think you have a gui..."
@@ -135,11 +189,9 @@ sync_gui() {
     sudo add-apt-repository -y ppa:agornostal/ulauncher
     sudo apt update
     
-    apt_install "libxcb-render0-dev"
-    apt_install "libpangocairo-1.0-0"
-    apt_install "python3-pip"
+    install_picom
+    install_qtile
 
-    apt_install "picom"
     apt_install "alacritty"
     apt_install "papirus-icon-theme"
     apt_install "i3lock-fancy"
@@ -148,8 +200,6 @@ sync_gui() {
     apt_install "volumeicon-alsa"
     apt_install "ulauncher"
     apt_install "cbatticon"
-
-    confirm "I'm going to install the desktop environment."
 
     rm -rf "$HOME/.themes/Nordic-darker"
     curl -sSLo "$workdir/Nordic-darker.tar.xz" "https://github.com/EliverLara/Nordic/releases/download/2.0.0/Nordic-darker.tar.xz"
@@ -164,11 +214,6 @@ sync_gui() {
         --create-dirs "$dotfiles_url/home/.config/gtk-3.0/settings.ini"
     
     rm -rf "$HOME/.config/qtile"
-    pip install dbus-next
-    pip install xcffib
-    pip install cairocffi
-    git clone "git://github.com/qtile/qtile.git" "$workdir/qtile"
-    pip install "$workdir/qtile"
     curl -sSLo "$HOME/.config/qtile/config.py" \
         --create-dirs "$dotfiles_url/home/.config/qtile/config.py"
     curl -sSLo "$HOME/.config/qtile/autostart.sh" \
