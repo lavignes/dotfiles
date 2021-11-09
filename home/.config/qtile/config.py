@@ -105,8 +105,8 @@ screens = [
                     highlight_method='block',
                     active=colors['foreground'][0],
                     inactive=colors['background'][0],
-                    this_screen_border=colors['info'][1],
-                    this_current_screen_border=colors['info'][1],
+                    this_screen_border=colors['debug'][1],
+                    this_current_screen_border=colors['debug'][1],
                 ),
                 widget.Prompt(
                     font='mono',
@@ -117,13 +117,13 @@ screens = [
                     visual_bell_color=colors['error'][0],
                 ),
                 widget.WindowCount(
-                    background=colors['trace'][1],
-                    foreground=colors['foreground'][0],
+                    background=colors['warn'][0],
+                    foreground=colors['warn'][1],
                     show_zero=True,
                 ),
                 widget.WindowName(
                     empty_group_string='no active window',
-                    background=colors['info'][1],
+                    background=colors['debug'][1],
                     foreground=colors['foreground'][0],
                 ),
                 widget.Systray(
