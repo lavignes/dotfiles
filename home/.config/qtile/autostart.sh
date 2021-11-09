@@ -1,5 +1,7 @@
 #!/bin/sh
 
+autorandr -c
+
 hsetroot -solid "#696969"
 
 picom --vsync --shadow --backend glx & 

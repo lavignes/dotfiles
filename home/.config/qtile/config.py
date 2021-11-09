@@ -11,6 +11,10 @@ def autostart():
     home = os.path.expanduser('~')
     subprocess.Popen([home + '/.config/qtile/autostart.sh'])
 
+def refresh():
+    subprocess.Popen(['autorandr', '-c'])
+    lazy.reload_config()
+
 mod = 'mod4'
 terminal = guess_terminal()
 
@@ -51,7 +55,7 @@ keys = [
     Key([mod, 'control'], 'l',
         lazy.spawn('i3lock-fancy'), desc='Lock the screen'),
     Key([mod, 'control'], 'r',
-        lazy.reload_config(), desc='Reload the config'),
+        refresh(), desc='Reload the config'),
     Key([mod, 'control'], 'q',
         lazy.shutdown(), desc='Shutdown Qtile'),
     Key([mod], 'r', lazy.spawncmd(),
@@ -125,13 +129,6 @@ screens = [
                     empty_group_string='no active window',
                     background=colors['info'][1],
                     foreground=colors['foreground'][0],
-                ),
-                widget.Notify(
-                    foreground_low=colors['debug'][0],
-                    foreground_high=colors['warn'][0],
-                    foreground_urgent=colors['error'][0],
-                    foreground=colors['foreground'][0],
-                    max_chars=40,
                 ),
                 widget.Systray(
                     icon_size=24,

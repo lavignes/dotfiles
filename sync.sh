@@ -202,6 +202,9 @@ sync_gui() {
     apt_install "volumeicon-alsa"
     apt_install "ulauncher"
     apt_install "cbatticon"
+    apt_install "arandr"
+    apt_install "autorandr"
+    apt_install "dunst"
 
     rm -rf "$HOME/.themes/Nordic-darker"
     curl -sSLo "$workdir/Nordic-darker.tar.xz" "https://github.com/EliverLara/Nordic/releases/download/2.0.0/Nordic-darker.tar.xz"
@@ -233,6 +236,10 @@ sync_gui() {
     rm -rf "$HOME/.config/alacritty"
     curl -sSLo "$HOME/.config/alacritty/alacritty.yml" \
         --create-dirs "$dotfiles_url/home/.config/alacritty/alacritty.yml"
+
+    rm -rf "$HOME/.config/dunst/dunstrc"
+    curl -sSLo "$HOME/.config/dunst/dunstrc" \
+        --create-dirs "$dotfiles_url/home/.config/dunst/dunstrc"
 
     rm -f "$HOME/.Xresources"
     curl -sSLo "$HOME/.Xresources" "$dotfiles_url/home/.Xresources"
