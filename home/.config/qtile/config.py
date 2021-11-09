@@ -11,10 +11,6 @@ def autostart():
     home = os.path.expanduser('~')
     subprocess.Popen([home + '/.config/qtile/autostart.sh'])
 
-def refresh():
-    subprocess.Popen(['autorandr', '-c'])
-    lazy.reload_config()
-
 mod = 'mod4'
 terminal = guess_terminal()
 
@@ -55,7 +51,7 @@ keys = [
     Key([mod, 'control'], 'l',
         lazy.spawn('i3lock-fancy'), desc='Lock the screen'),
     Key([mod, 'control'], 'r',
-        refresh(), desc='Reload the config'),
+        lazy.spawn('autorandr -c'), lazy.reload_config(), desc='Reload the config'),
     Key([mod, 'control'], 'q',
         lazy.shutdown(), desc='Shutdown Qtile'),
     Key([mod], 'r', lazy.spawncmd(),
