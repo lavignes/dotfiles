@@ -54,10 +54,11 @@ inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
+colorscheme ron 
+
 " Make popup menu colors not hard to read
 hi Pmenu ctermbg=black ctermfg=white
 
-colorscheme ron 
 set updatetime=300
 set nowrap
 set laststatus=2
