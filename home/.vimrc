@@ -59,6 +59,7 @@ colorscheme ron
 " Make popup menu colors not hard to read
 hi Pmenu ctermbg=black ctermfg=white
 
+set noswapfile
 set updatetime=300
 set nowrap
 set laststatus=2
