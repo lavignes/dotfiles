@@ -10,6 +10,8 @@ Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'puremourning/vimspector'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'samsaga2/vim-z80'
 call plug#end()
 
 " F1 toggles NERDTree
