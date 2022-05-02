@@ -87,7 +87,7 @@ sync_shell() {
     if [ "$(basename "$SHELL")" != "zsh" ]; then
         echo "The current shell does not seem like zsh. I can fix that..."
         echo "You'll probably have to provide a password :("
-        chsh -s "$(which zsh)"
+        chsh -s "$(command -v zsh)"
     fi
 }
 
@@ -143,10 +143,20 @@ sync_gui() {
         --create-dirs "$dotfiles_url/home/.config/alacritty/alacritty.yml"
 }
 
+sync_bin() {
+    mkdir -p "$HOME/bin"
+
+    set -- "ssh_tunnel"
+    for f in "$@"; do
+        curl -sSLo "$HOME/bin/$f" "$dotfiles_url/home/bin/$f"
+    done
+}
+
 require_command "curl"
 sync_git
 sync_shell
 sync_vim
+sync_bin
 sync_gui
 
 echo "That's it! You should log out and log back in."
