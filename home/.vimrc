@@ -7,12 +7,11 @@ call plug#begin('~/.vim/plugged')
 Plug 'itchyny/lightline.vim'
 Plug 'preservim/nerdtree'
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
-Plug 'puremourning/vimspector'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'ntpeters/vim-better-whitespace'
-Plug 'samsaga2/vim-z80'
 call plug#end()
+
+packadd termdebug
 
 " F1 toggles NERDTree
 nnoremap <F1> :NERDTreeMirror<CR>:NERDTreeToggle<CR>
