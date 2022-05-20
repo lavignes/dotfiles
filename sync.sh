@@ -94,7 +94,7 @@ sync_shell() {
 sync_node() {
     confirm "I will now install nvm and update to the latest nodejs."
     
-    eval "$(curl -sSL "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh")"
+    eval "$(curl -sSL "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh")"
     NVM_DIR="$HOME/.nvm"
     # shellcheck source=/dev/null
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
@@ -106,6 +106,7 @@ sync_node() {
 sync_vim() {
     apt_install "vim"
     yum_install "vim" 
+    require_command "vim"
     sync_node
 
     confirm "I will now replace your vim configuration."
@@ -115,6 +116,11 @@ sync_vim() {
     curl -sSLo "$HOME/.vimrc" "$dotfiles_url/home/.vimrc"
     curl -sSLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
         "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+
+    set -- "coc-settings.json"
+    for f in "$@"; do
+        curl -sSLo "$HOME/.vim/$f" "$dotfiles_url/home/.vim/$f"
+    done
 
     echo "This will look weird. But in 5 seconds I will start vim and set it up."
     echo "Don't worry, it will close right afterward..."
@@ -126,21 +132,18 @@ sync_vim() {
 sync_gui() {
     if [ -z "$XDG_SESSION_TYPE" ]; then
         echo "I don't think you have a gui..."
+        echo "That's it! Everything is up to date!"
         return 
     fi
 
     confirm "All the basic stuff is done. I can now setup the gui."
 
     sudo add-apt-repository -y ppa:papirus/papirus
-    sudo add-apt-repository -y ppa:aslatter/ppa
     sudo apt update
     
-    apt_install "alacritty"
     apt_install "papirus-icon-theme"
-
-    rm -rf "$HOME/.config/alacritty"
-    curl -sSLo "$HOME/.config/alacritty/alacritty.yml" \
-        --create-dirs "$dotfiles_url/home/.config/alacritty/alacritty.yml"
+    
+    echo "That's it! You should log out and log back in."
 }
 
 sync_bin() {
@@ -158,5 +161,3 @@ sync_shell
 sync_vim
 sync_bin
 sync_gui
-
-echo "That's it! You should log out and log back in."
