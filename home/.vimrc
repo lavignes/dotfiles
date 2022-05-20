@@ -11,7 +11,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 call plug#end()
 
-packadd termdebug
+packadd! termdebug
 
 " F1 toggles NERDTree
 nnoremap <F1> :NERDTreeMirror<CR>:NERDTreeToggle<CR>
