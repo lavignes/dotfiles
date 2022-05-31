@@ -93,7 +93,7 @@ endfunction
 " Automatically enter normal mode in terminal with scroll wheel
 tmap <silent> <ScrollWheelUp> <c-w>:call EnterNormalMode()<CR>
 
-" swallow warning on first run since we havent installed it yet
+" On first-run the colorscheme doesn't exist yet :-)
 silent! colorscheme challenger_deep 
 
 " Make popup menu colors not hard to read
@@ -117,3 +117,4 @@ set expandtab
 set shiftwidth=4
 set tabstop=4
 set cursorline
+set spell spelllang=en_us
