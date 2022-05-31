@@ -109,6 +109,9 @@ sync_vim() {
     require_command "vim"
     sync_node
 
+    apt_install "silversearcher-ag"
+    yum_install "the_silver_searcher"
+
     confirm "I will now replace your vim configuration."
     rm -rf "$HOME/.vim"
     rm -f "$HOME/.vimrc"
