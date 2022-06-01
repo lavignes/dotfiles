@@ -11,6 +11,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'mg979/vim-visual-multi', { 'branch': 'master' }
 Plug 'rafi/awesome-vim-colorschemes'
+Plug 'lavignes/possum-vim' 
 call plug#end()
 
 packadd! termdebug
