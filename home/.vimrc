@@ -16,6 +16,7 @@ call plug#end()
 
 packadd! termdebug
 let g:termdebug_wide=1
+autocmd FileType rust let termdebugger="rust-gdb"
 
 " F1 toggles NERDTree
 nnoremap <F1> :NERDTreeMirror<CR>:NERDTreeToggle<CR>
