@@ -95,7 +95,7 @@ endfunction
 tmap <silent> <ScrollWheelUp> <c-w>:call EnterNormalMode()<CR>
 
 " On first-run the colorscheme doesn't exist yet :-)
-silent! colorscheme scheakur  
+silent! colorscheme xoria256  
 
 " Make popup menu colors not hard to read
 hi Pmenu ctermbg=black ctermfg=white
