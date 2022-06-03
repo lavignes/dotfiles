@@ -98,9 +98,9 @@ sync_node() {
     NVM_DIR="$HOME/.nvm"
     # shellcheck source=/dev/null
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    nvm install node
-    nvm use node
-    nvm alias default node
+    nvm install 16
+    nvm use 16
+    nvm alias default 16
 }
 
 ag_install() {
