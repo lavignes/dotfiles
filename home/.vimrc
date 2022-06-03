@@ -118,4 +118,3 @@ set expandtab
 set shiftwidth=4
 set tabstop=4
 set cursorline
-set spell spelllang=en_us
