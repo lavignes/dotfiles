@@ -149,7 +149,7 @@ sync_vim() {
     echo "Don't worry, it will close right afterward..."
     sleep 5
     vim -c ":PlugInstall" -c ":qall!"
-    vim -c ":CocInstall -sync coc-rust-analyzer" -c ":qall!"
+    vim -c ":CocInstall -sync coc-java coc-java-debug coc-rust-analyzer" -c ":qall!"
 }
 
 sync_gui() {
