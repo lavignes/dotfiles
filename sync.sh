@@ -103,6 +103,26 @@ sync_node() {
     nvm alias default node
 }
 
+ag_install() {
+    if [ -x "$(command -v "ag")" ]; then
+        return
+    fi
+    if [ "$os_pkg_manager" != "yum" ]; then
+        return
+    fi
+    yum_install "pkgconfig"
+    yum_install "automake"
+    yum_install "gcc"
+    yum_install "zlib-devel"
+    yum_install "pcre-devel"
+    yum_install "xz-devel"
+    git clone "https://github.com/ggreer/the_silver_searcher.git" "$workdir"
+    pushd "$workdir/the_silver_searcher"
+    ./build.sh
+    sudo make install
+    popd
+}
+
 sync_vim() {
     apt_install "vim"
     yum_install "vim" 
@@ -110,7 +130,7 @@ sync_vim() {
     sync_node
 
     apt_install "silversearcher-ag"
-    yum_install "the_silver_searcher"
+    ag_install
 
     confirm "I will now replace your vim configuration."
     rm -rf "$HOME/.vim"
