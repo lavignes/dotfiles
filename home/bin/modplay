@@ -16,15 +16,18 @@ while true
 do
 
     if ! ps --pid "$pid" &> /dev/null; then
-        rand="$(shuf -i 1-198510 -n 1)"
-        file="$1/$rand"
+        modid="$(shuf -i 1-198510 -n 1)"
+        
+        file="$1/$modid.mod"
         if [ ! -f "$file" ]; then
-            status="$(curl -s -o "$file" -w "%{http_code}" "https://modarchive.org/jsplayer.php?moduleid=$rand")"
+            status="$(curl -s -o "$file" -w "%{http_code}" "https://modarchive.org/jsplayer.php?moduleid=$modid")"
             if [ "$status" != "200" ]; then
                 rm "$file"
+
                 continue
-            fi 
+            fi
         fi
+        
         xmp "$file" &
         pid="$!"
     fi
@@ -37,7 +40,6 @@ do
             ;;
         n)
             pkill --signal 9 -P "$$"
-            pid="-1"
             ;;
     esac
 
