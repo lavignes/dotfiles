@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+if [ ! -d "$1" ]; then
+    echo "$1 is not a directory!"
+    exit 1
+fi
+
+pid=""
+
+while true
+do
+
+    if [ "$pid" = "" ] || pgrep -x "$pid" > /dev/null; then
+        rand="$(shuf -i 1-198510 -n 1)"
+        file="$1/$rand"
+        if [ ! -f "$file" ]; then
+            curl -s "https://modarchive.org/jsplayer.php?moduleid=${rand}" > "$file"
+        fi
+        xmp "$file" &
+        pid="$!"
+    fi
+
+    read -n 1 -s -r -t 1 cmd
+    case "$cmd" in
+        q)
+            pkill --signal 9 -P $$
+            exit 1
+            ;;
+        n)
+            pkill --signal 9 -P $$
+            pid=""
+            ;;
+    esac
+
+done
+
+
