@@ -172,9 +172,10 @@ sync_gui() {
 sync_bin() {
     mkdir -p "$HOME/bin"
 
-    set -- "ssh_tunnel"
+    set -- "ssh-tunnel" "modplay"
     for f in "$@"; do
         curl -sSLo "$HOME/bin/$f" "$dotfiles_url/home/bin/$f"
+        chmod +x "$HOME/bin/$f"
     done
 }
 
