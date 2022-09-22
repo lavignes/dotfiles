@@ -103,6 +103,11 @@ sync_node() {
     nvm alias default 16
 }
 
+sync_rust() {
+    confirm "I will now install rustup and cargo."
+    curl -sSL "https://sh.rustup.rs" | sh -s -- --no-modify-path -y
+}
+
 ag_install() {
     if [ -x "$(command -v "ag")" ]; then
         return
@@ -182,6 +187,7 @@ sync_bin() {
 require_command "curl"
 sync_git
 sync_shell
+sync_rust
 sync_vim
 sync_bin
 sync_gui
