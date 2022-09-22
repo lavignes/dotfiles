@@ -89,6 +89,8 @@ sync_shell() {
         echo "You'll probably have to provide a password :("
         chsh -s "$(command -v zsh)"
     fi
+
+    . "$HOME/.zshrc"
 }
 
 sync_node() {
