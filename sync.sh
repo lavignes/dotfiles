@@ -89,8 +89,6 @@ sync_shell() {
         echo "You'll probably have to provide a password :("
         chsh -s "$(command -v zsh)"
     fi
-
-    . "$HOME/.zshrc"
 }
 
 sync_node() {
@@ -108,6 +106,7 @@ sync_node() {
 sync_rust() {
     confirm "I will now install rustup and cargo."
     curl -sSL "https://sh.rustup.rs" | sh -s -- --no-modify-path -y
+    export PATH="$PATH:$HOME/.cargo/bin"
 }
 
 ag_install() {
