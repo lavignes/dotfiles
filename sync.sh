@@ -121,7 +121,7 @@ ag_install() {
     yum_install "zlib-devel"
     yum_install "pcre-devel"
     yum_install "xz-devel"
-    git clone "https://github.com/ggreer/the_silver_searcher.git" "$workdir"
+    git clone "https://github.com/ggreer/the_silver_searcher.git" "$workdir/the_silver_searcher"
     pushd "$workdir/the_silver_searcher"
     ./build.sh
     sudo make install
