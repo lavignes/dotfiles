@@ -106,7 +106,7 @@ sync_node() {
 sync_rust() {
     confirm "I will now install rustup and cargo."
     curl -sSL "https://sh.rustup.rs" | sh -s -- --no-modify-path -y
-    export PATH="$PATH:$HOME/.cargo/bin"
+    export PATH="$HOME/.cargo/bin:$PATH"
 }
 
 ag_install() {
