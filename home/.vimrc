@@ -12,6 +12,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'mg979/vim-visual-multi', { 'branch': 'master' }
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'wfxr/minimap.vim', { 'do': ':!cargo install --locked code-minimap' }
+Plug 'lavignes/az65-vim'
 call plug#end()
 
 packadd! termdebug
