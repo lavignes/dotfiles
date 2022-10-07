@@ -11,16 +11,20 @@ Plug 'mg979/vim-visual-multi', { 'branch': 'master' }
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'wfxr/minimap.vim', { 'do': ':!cargo install --locked code-minimap' }
 Plug 'lavignes/az65-vim'
+Plug 'ntpeters/vim-better-whitespace'
 call plug#end()
 
 packadd! termdebug
 let g:termdebug_wide=1
 autocmd FileType rust let termdebugger="rust-gdb"
 
+" ctrl+p to fzf
+nmap <C-P> :FZF<CR>
+
 " F1 toggles NERDTree
 nnoremap <F1> :NERDTreeMirror<CR>:NERDTreeToggle<CR>
 " Close vim if NERDTree is the only thing open
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") 
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree")
       \ && b:NERDTree.isTabTree()) | q | endif
 
 command! -nargs=0 Rename :call CocActionAsync('rename')
@@ -87,7 +91,7 @@ endfunction
 tmap <silent> <ScrollWheelUp> <c-w>:call EnterNormalMode()<CR>
 
 " On first-run the colorscheme doesn't exist yet :-)
-silent! colorscheme xoria256  
+silent! colorscheme xoria256
 
 " Make popup menu colors not hard to read
 hi Pmenu ctermbg=black ctermfg=white
