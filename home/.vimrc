@@ -33,8 +33,7 @@ command! -nargs=0 Doc :call <SID>show_documentation()
 command! -nargs=0 Def :call CocAction('jumpDefinition')
 command! -nargs=0 Used :call CocAction('jumpUsed')
 
-command! -nargs=0 RustRun CocCommand rust-analyzer.run
-command! -nargs=0 RustDebug CocCommand rust-analyzer.debug
+command! -nargs=0 Run :call CocActionAsync('codeLensAction')
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -50,6 +49,7 @@ endfunction
 " format on enter, <cr> could be remapped by other vim plugin
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
 
 " Sane tabs
 nnoremap <S-Tab> <<
