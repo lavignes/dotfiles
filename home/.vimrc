@@ -12,6 +12,7 @@ Plug 'rafi/awesome-vim-colorschemes'
 Plug 'wfxr/minimap.vim', { 'do': ':!cargo install --locked code-minimap' }
 Plug 'lavignes/az65-vim'
 Plug 'ntpeters/vim-better-whitespace'
+Plug 'kylelaker/riscv.vim'
 call plug#end()
 
 packadd! termdebug
@@ -33,7 +34,7 @@ command! -nargs=0 Doc :call <SID>show_documentation()
 command! -nargs=0 Def :call CocAction('jumpDefinition')
 command! -nargs=0 Used :call CocAction('jumpUsed')
 
-command! -nargs=0 Run :call CocActionAsync('codeLensAction')
+command! -nargs=0 Action :call CocActionAsync('codeLensAction')
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
