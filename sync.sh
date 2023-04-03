@@ -133,6 +133,11 @@ ag_install() {
 }
 
 sync_vim() {
+    if [ "$os_pkg_manager" == "apt" ]; then
+        sudo add-apt-repository ppa:jonathonf/vim
+        sudo apt update
+    fi
+
     apt_install "vim"
     yum_install "vim"
     require_command "vim"
