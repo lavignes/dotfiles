@@ -2,13 +2,15 @@ env:
   TERM: xterm-256color
 
 window:
-  decorations: none
+  decorations: Full
 
 font:
-  size: 14
+  size: 20
+  normal:
+    family: Tamzen
 
 cursor:
   style:
-    blinking: On
+    blinking: Always
 
 live_config_reload: true

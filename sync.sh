@@ -22,10 +22,10 @@ if [ -x "$(command -v "yum")" ]; then
 fi
 
 confirm() {
-    echo "$1" 
+    echo "$1"
     echo "Is this ok (y/n)?"
     read -r choice
-    case "$choice" in 
+    case "$choice" in
         y|yes|Y)
             ;;
 
@@ -64,7 +64,7 @@ sync_git() {
     require_command "git"
 
     confirm "I will now replace your git configuration."
-    
+
     rm -f "$HOME/.gitconfig"
     curl -sSLo "$HOME/.gitconfig" "$dotfiles_url/home/.gitconfig"
 }
@@ -73,10 +73,10 @@ sync_shell() {
     apt_install "zsh"
     yum_install "zsh"
     require_command "zsh"
- 
+
     confirm "I will now reinstall oh-my-zsh and replace your zsh configuration."
 
-    rm -rf "$HOME/.oh-my-zsh" 
+    rm -rf "$HOME/.oh-my-zsh"
     rm -f "$HOME/.zshrc"
 
     curl -sSLo "$workdir/install.sh" "https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
@@ -89,11 +89,14 @@ sync_shell() {
         echo "You'll probably have to provide a password :("
         chsh -s "$(command -v zsh)"
     fi
+
+    rm -f "$HOME/.tmux.conf"
+    curl -sSLo "$HOME/.tmux.conf" "$dotfiles_url/home/.tmux.conf"
 }
 
 sync_node() {
     confirm "I will now install nvm and update to the latest nodejs."
-    
+
     eval "$(curl -sSL "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh")"
     NVM_DIR="$HOME/.nvm"
     # shellcheck source=/dev/null
@@ -131,7 +134,7 @@ ag_install() {
 
 sync_vim() {
     apt_install "vim"
-    yum_install "vim" 
+    yum_install "vim"
     require_command "vim"
     sync_node
 
@@ -155,23 +158,34 @@ sync_vim() {
     echo "Don't worry, it will close right afterward..."
     sleep 5
     vim -c ":PlugInstall" -c ":qall!"
-    vim -c ":CocInstall -sync coc-java coc-java-debug coc-rust-analyzer" -c ":qall!"
+    vim -c ":CocInstall -sync coc-rust-analyzer" -c ":qall!"
 }
 
 sync_gui() {
     if [ -z "$XDG_SESSION_TYPE" ]; then
         echo "I don't think you have a gui..."
         echo "That's it! Everything is up to date!"
-        return 
+        return
     fi
 
     confirm "All the basic stuff is done. I can now setup the gui."
 
     sudo add-apt-repository -y ppa:papirus/papirus
+    sudo add-apt-repository -y ppa:aslatter/ppa
     sudo apt update
-    
+
     apt_install "papirus-icon-theme"
-    
+    apt_install "alacritty"
+
+    rm -rf "$HOME/.config/alacritty"
+    mkdir -p "$HOME/.config/alacritty"
+    curl -sSLo "$HOME/.config/alacritty/alacritty.yml" "$dotfiles_url/home/.config/alacritty/alacritty.yml"
+
+    rm -f "$HOME/.local/share/fonts/Tamzen*"
+    git clone https://github.com/sunaku/tamzen-font.git "$workdir/tamzen-font"
+    mv -f "$workdir/tamzen-font/otb/Tamzen*" "$HOME/.local/share/fonts/"
+    fc-cache -v -f
+
     echo "That's it! You should log out and log back in."
 }
 
@@ -184,6 +198,9 @@ sync_bin() {
         chmod +x "$HOME/bin/$f"
     done
 }
+
+
+https://github.com/sunaku/tamzen-font/archive/refs/tags/Tamzen-1.11.6.tar.gz
 
 require_command "curl"
 sync_git
