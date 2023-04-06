@@ -90,6 +90,8 @@ sync_shell() {
         chsh -s "$(command -v zsh)"
     fi
 
+    apt_install "tmux"
+    yum_install "tmux"
     rm -f "$HOME/.tmux.conf"
     curl -sSLo "$HOME/.tmux.conf" "$dotfiles_url/home/.tmux.conf"
 }
@@ -133,10 +135,10 @@ ag_install() {
 }
 
 sync_vim() {
-    if [ "$os_pkg_manager" == "apt" ]; then
-        sudo add-apt-repository ppa:jonathonf/vim
-        sudo apt update
-    fi
+    #if [ "$os_pkg_manager" == "apt" ]; then
+    #    sudo add-apt-repository ppa:jonathonf/vim
+    #    sudo apt update
+    #fi
 
     apt_install "vim"
     yum_install "vim"
