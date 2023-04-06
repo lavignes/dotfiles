@@ -190,7 +190,9 @@ sync_gui() {
 
     rm -f "$HOME/.local/share/fonts/Tamzen*"
     git clone https://github.com/sunaku/tamzen-font.git "$workdir/tamzen-font"
-    mv -f "$workdir/tamzen-font/otb/Tamzen*" "$HOME/.local/share/fonts/"
+    find "$workdir/tamzen-font/otb" -name "*.otb" | while read f; do
+        mv -f "$f" "$HOME/.local/share/fonts/"
+    done;
     fc-cache -v -f
 
     echo "That's it! You should log out and log back in."
@@ -205,9 +207,6 @@ sync_bin() {
         chmod +x "$HOME/bin/$f"
     done
 }
-
-
-https://github.com/sunaku/tamzen-font/archive/refs/tags/Tamzen-1.11.6.tar.gz
 
 require_command "curl"
 sync_git
