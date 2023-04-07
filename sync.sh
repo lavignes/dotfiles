@@ -189,11 +189,18 @@ sync_gui() {
     curl -sSLo "$HOME/.config/alacritty/alacritty.yml" "$dotfiles_url/home/.config/alacritty/alacritty.yml"
 
     rm -f "$HOME/.local/share/fonts/Tamzen*"
+    mkdir -p "$HOME/.local/share/fonts"
     git clone https://github.com/sunaku/tamzen-font.git "$workdir/tamzen-font"
     find "$workdir/tamzen-font/otb" -name "*.otb" | while read f; do
         mv -f "$f" "$HOME/.local/share/fonts/"
     done;
-    fc-cache -v -f
+    fc-cache "$HOME/.local/share/fonts"
+
+    sudo rm -f /etc/fonts/conf.d/70-no-bitmaps.conf
+    sudo rm -f /etc/fonts/conf.d/70-force-bitmaps.conf
+    sudo ln -s ../conf.avail/70-force-bitmaps.conf /etc/fonts/conf.d/
+    sudo dpkg-reconfigure fontconfig-config
+    sudo dpkg-reconfigure fontconfig
 
     echo "That's it! You should log out and log back in."
 }
