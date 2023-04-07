@@ -13,11 +13,17 @@ Plug 'wfxr/minimap.vim', { 'do': ':!cargo install --locked code-minimap' }
 Plug 'lavignes/az65-vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'kylelaker/riscv.vim'
+Plug 'dhruvasagar/vim-table-mode'
+Plug 'lmintmate/blue-mood-vim'
+Plug 'puremourning/vimspector'
 call plug#end()
 
 packadd! termdebug
 let g:termdebug_wide=1
 autocmd FileType rust let termdebugger="rust-gdb"
+
+" make tables markdown-compatible
+let g:table_mode_corner='|'
 
 " ctrl+p to fzf
 nmap <C-P> :FZF<CR>
@@ -27,6 +33,9 @@ nnoremap <F1> :NERDTreeMirror<CR>:NERDTreeToggle<CR>
 " Close vim if NERDTree is the only thing open
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree")
       \ && b:NERDTree.isTabTree()) | q | endif
+let NERDTreeMinimalUI=1
+let g:NERDTreeDirArrowExpandable = '+'
+let g:NERDTreeDirArrowCollapsible = '-'
 
 command! -nargs=0 Rename :call CocActionAsync('rename')
 command! -nargs=0 Fmt :call CocAction('format')
@@ -58,11 +67,14 @@ inoremap <S-Tab> <C-d>
 nnoremap <Tab> >>
 inoremap <Tab> <C-I>
 
+" xclip
+vnoremap <C-y> :'<,'>w !xclip -selection clipboard<Cr><Cr>
+
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 let g:lightline = {
-	\ 'colorscheme': 'deus',
+	\ 'colorscheme': 'blue_mood',
 	\ 'active': {
 	\   'left': [ [ 'mode', 'paste' ],
 	\             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
@@ -92,11 +104,12 @@ endfunction
 tmap <silent> <ScrollWheelUp> <c-w>:call EnterNormalMode()<CR>
 
 " On first-run the colorscheme doesn't exist yet :-)
-silent! colorscheme xoria256
+silent! colorscheme blue-mood
 
 " Make popup menu colors not hard to read
 hi Pmenu ctermbg=black ctermfg=white
 
+set termguicolors
 set noswapfile
 set updatetime=300
 set nowrap
