@@ -15,7 +15,6 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'kylelaker/riscv.vim'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'lmintmate/blue-mood-vim'
-Plug 'puremourning/vimspector'
 call plug#end()
 
 packadd! termdebug
@@ -123,7 +122,7 @@ set splitright
 set number
 set wildmenu
 set wildmode=longest,full
-set colorcolumn=120
+set colorcolumn=100
 set expandtab
 set shiftwidth=4
 set tabstop=4

@@ -202,6 +202,8 @@ sync_gui() {
     sudo dpkg-reconfigure fontconfig-config
     sudo dpkg-reconfigure fontconfig
 
+    apt_install "fonts-spleen"
+
     echo "That's it! You should log out and log back in."
 }
 
