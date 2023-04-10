@@ -2,19 +2,24 @@ set nocompatible
 set encoding=utf-8
 
 call plug#begin('~/.vim/plugged')
+Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'itchyny/lightline.vim'
 Plug 'preservim/nerdtree'
-Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'dhruvasagar/vim-table-mode'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'mg979/vim-visual-multi', { 'branch': 'master' }
-Plug 'rafi/awesome-vim-colorschemes'
-Plug 'wfxr/minimap.vim', { 'do': ':!cargo install --locked code-minimap' }
+
+" languages
 Plug 'lavignes/az65-vim'
-Plug 'ntpeters/vim-better-whitespace'
 Plug 'kylelaker/riscv.vim'
-Plug 'dhruvasagar/vim-table-mode'
+
+" colorschemes
+Plug 'rafi/awesome-vim-colorschemes'
 Plug 'lmintmate/blue-mood-vim'
+Plug 'sainnhe/everforest'
 call plug#end()
 
 packadd! termdebug
@@ -59,7 +64,6 @@ endfunction
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
-
 " Sane tabs
 nnoremap <S-Tab> <<
 inoremap <S-Tab> <C-d>
@@ -67,13 +71,18 @@ nnoremap <Tab> >>
 inoremap <Tab> <C-I>
 
 " xclip
-vnoremap <C-y> :'<,'>w !xclip -selection clipboard<Cr><Cr>
+vnoremap <C-c> :w !xclip -sel clipboard<CR><CR>
 
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
+set background=dark
+let g:everforest_background = 'hard'
+" On first-run the colorscheme doesn't exist yet :-)
+silent! colorscheme everforest
+
 let g:lightline = {
-	\ 'colorscheme': 'blue_mood',
+	\ 'colorscheme': 'everforest',
 	\ 'active': {
 	\   'left': [ [ 'mode', 'paste' ],
 	\             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
@@ -101,9 +110,6 @@ endfunction
 
 " Automatically enter normal mode in terminal with scroll wheel
 tmap <silent> <ScrollWheelUp> <c-w>:call EnterNormalMode()<CR>
-
-" On first-run the colorscheme doesn't exist yet :-)
-silent! colorscheme blue-mood
 
 " Make popup menu colors not hard to read
 hi Pmenu ctermbg=black ctermfg=white
