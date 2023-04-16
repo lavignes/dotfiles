@@ -1,8 +1,16 @@
 {
     "codeLens.enable": true,
     "coc.preferences.formatOnSaveFiletypes": ["rust"],
+
     "rust-analyzer.inlayHints.enable": false,
     "rust-analyzer.lens.enable": true,
     "rust-analyzer.lens.run.enable": true,
-    "rust-analyzer.lens.debug.enable": true
+    "rust-analyzer.lens.debug.enable": true,
+
+    "languageserver": {
+        "wgsl": {
+            "command": "wgsl_analyzer",
+            "filetypes": ["wgsl"]
+         }
+    }
 }
