@@ -15,7 +15,7 @@ window:
     lines: 30
 
 font:
-  size: 16
+  size: 18
   normal:
     family: spleen
 
