@@ -19,32 +19,33 @@ font:
   normal:
     family: spleen
 
+# Midnight Haze theme
 colors:
   # Default colors
   primary:
-    background: '0x1f1f1f'
-    foreground: '0xe5e1d8'
+    background: '0x0c0c16'
+    foreground: '0xd8dee9'
 
   # Normal colors
   normal:
-    black:   '0x000000'
-    red:     '0xf7786d'
-    green:   '0xbde97c'
-    yellow:  '0xefdfac'
-    blue:    '0x6ebaf8'
-    magenta: '0xef88ff'
-    cyan:    '0x90fdf8'
-    white:   '0xe5e1d8'
+    black:   '0x2c2c3d'
+    red:     '0xff6e6e'
+    green:   '0x9ec875'
+    yellow:  '0xffa759'
+    blue:    '0x70a7d4'
+    magenta: '0xd291e0'
+    cyan:    '0x96e0e0'
+    white:   '0xd8dee9'
 
   # Bright colors
   bright:
-    black:   '0xb4b4b4'
-    red:     '0xf99f92'
-    green:   '0xe3f7a1'
-    yellow:  '0xf2e9bf'
-    blue:    '0xb3d2ff'
-    magenta: '0xe5bdff'
-    cyan:    '0xc2fefa'
+    black:   '0x414166'
+    red:     '0xff8d8d'
+    green:   '0xb3d987'
+    yellow:  '0xffc57f'
+    blue:    '0x9bb3d3'
+    magenta: '0xffa1ff'
+    cyan:    '0x9cd8d8'
     white:   '0xffffff'
 
 cursor:
