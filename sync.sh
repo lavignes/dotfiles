@@ -135,11 +135,6 @@ ag_install() {
 }
 
 sync_vim() {
-    #if [ "$os_pkg_manager" == "apt" ]; then
-    #    sudo add-apt-repository ppa:jonathonf/vim
-    #    sudo apt update
-    #fi
-
     apt_install "vim"
     yum_install "vim"
     require_command "vim"
@@ -151,8 +146,10 @@ sync_vim() {
     confirm "I will now replace your vim configuration."
     rm -rf "$HOME/.vim"
     rm -f "$HOME/.vimrc"
+    rm -rf "$HOME/.config/nvim"
 
     curl -sSLo "$HOME/.vimrc" "$dotfiles_url/home/.vimrc"
+    curl -sSLo "$HOME/.config/nvim/init.vim" "$dotfiles_url/home/.config/nvim/init.vim"
     curl -sSLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
         "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
 

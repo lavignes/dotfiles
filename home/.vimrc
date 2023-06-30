@@ -5,6 +5,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'itchyny/lightline.vim'
 Plug 'preservim/nerdtree'
+Plug 'puremourning/vimspector'
 
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'dhruvasagar/vim-table-mode'
@@ -122,7 +123,9 @@ set nowrap
 set laststatus=2
 set cmdheight=2
 set mouse=a
-set ttymouse=sgr
+if !has('nvim')
+    set ttymouse=sgr
+endif
 set modeline
 set backspace=indent,eol,start
 set splitright
