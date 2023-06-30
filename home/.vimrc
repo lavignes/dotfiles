@@ -24,9 +24,33 @@ Plug 'lmintmate/blue-mood-vim'
 Plug 'sainnhe/everforest'
 call plug#end()
 
-packadd! termdebug
-let g:termdebug_wide=1
-autocmd FileType rust let termdebugger="rust-gdb"
+" ensure vim and nvim use the same coc-config
+let g:coc_config_home = '~/.vim/'
+
+" packadd! termdebug
+" let g:termdebug_wide=1
+" autocmd FileType rust let termdebugger="rust-gdb"
+
+let g:vimspector_enable_mappings = 'HUMAN'
+let g:vimspector_configurations = {
+    \ 'rust': {
+    \   'adapter': 'CodeLLDB',
+    \   'filetypes': [ 'rust' ],
+    \   'configuration': {
+    \     'type': 'lldb',
+    \     'request': 'launch',
+    \     'program': '${Executable}',
+    \     'args': [ '*${Args}' ],
+    \     'sourceLanguages': [ 'rust' ],
+    \     'breakpoints': {
+    \       'exception': {
+    \         'cpp_throw': 'Y',
+    \         'cpp_catch': 'N',
+    \       },
+    \     },
+    \   },
+    \ },
+    \ }
 
 " make tables markdown-compatible
 let g:table_mode_corner='|'
