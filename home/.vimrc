@@ -27,9 +27,18 @@ call plug#end()
 " ensure vim and nvim use the same coc-config
 let g:coc_config_home = '~/.vim/'
 
-" packadd! termdebug
-" let g:termdebug_wide=1
-" autocmd FileType rust let termdebugger="rust-gdb"
+packadd! termdebug
+let g:termdebug_wide=1
+autocmd FileType rust let termdebugger="rust-gdb"
+
+sign define vimspectorBP text=o             texthl=WarningMsg
+sign define vimspectorBPCond text=o?        texthl=WarningMsg
+sign define vimspectorBPLog text=!!         texthl=SpellRare
+sign define vimspectorBPDisabled text=o!    texthl=LineNr
+sign define vimspectorPC text=\ >           texthl=MatchParen
+sign define vimspectorPCBP text=o>          texthl=MatchParen
+sign define vimspectorCurrentThread text=>  texthl=MatchParen
+sign define vimspectorCurrentFrame text=>   texthl=Special
 
 let g:vimspector_enable_mappings = 'HUMAN'
 let g:vimspector_configurations = {

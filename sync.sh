@@ -149,7 +149,8 @@ sync_vim() {
     rm -rf "$HOME/.config/nvim"
 
     curl -sSLo "$HOME/.vimrc" "$dotfiles_url/home/.vimrc"
-    curl -sSLo "$HOME/.config/nvim/init.vim" "$dotfiles_url/home/.config/nvim/init.vim"
+    curl -sSLo "$HOME/.config/nvim/init.vim" --create-dirs \
+        "$dotfiles_url/home/.config/nvim/init.vim"
     curl -sSLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
         "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
 

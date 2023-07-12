@@ -11,8 +11,8 @@ shell:
 window:
   decorations: Full
   dimensions:
-    columns: 120
-    lines: 30
+    columns: 80
+    lines: 24
 
 font:
   size: 18
