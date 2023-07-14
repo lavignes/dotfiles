@@ -15,6 +15,7 @@ Plug 'mg979/vim-visual-multi', { 'branch': 'master' }
 
 " languages
 Plug 'lavignes/az65-vim'
+Plug 'lavignes/vasm65CE02.vim'
 Plug 'kylelaker/riscv.vim'
 Plug 'DingDean/wgsl.vim'
 
