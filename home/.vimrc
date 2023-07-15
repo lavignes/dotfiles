@@ -113,12 +113,14 @@ vnoremap <C-c> :w !xclip -sel clipboard<CR><CR>
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 set background=dark
-let g:everforest_background = 'hard'
 " On first-run the colorscheme doesn't exist yet :-)
-silent! colorscheme everforest
+silent! colorscheme jellybeans
+
+" Set visual-multi colorscheme
+autocmd VimEnter * :VMTheme purplegray
 
 let g:lightline = {
-	\ 'colorscheme': 'everforest',
+	\ 'colorscheme': 'jellybeans',
 	\ 'active': {
 	\   'left': [ [ 'mode', 'paste' ],
 	\             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
@@ -156,6 +158,7 @@ set updatetime=300
 set nowrap
 set laststatus=2
 set cmdheight=2
+set noshowmode
 set mouse=a
 if !has('nvim')
     set ttymouse=sgr
