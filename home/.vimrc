@@ -149,6 +149,12 @@ endfunction
 " Automatically enter normal mode in terminal with scroll wheel
 tmap <silent> <ScrollWheelUp> <c-w>:call EnterNormalMode()<CR>
 
+" Scroll to last edit position when switching buffers
+autocmd BufReadPost *
+     \ if line("'\"") > 0 && line("'\"") <= line("$") |
+     \   exe "normal! g`\"" |
+     \ endif
+
 " Make popup menu colors not hard to read
 hi Pmenu ctermbg=black ctermfg=white
 
