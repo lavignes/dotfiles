@@ -166,6 +166,7 @@ sync_vim() {
     sleep 5
     vim -c ":PlugInstall" -c ":qall!"
     vim -c ":CocInstall -sync coc-rust-analyzer" -c ":qall!"
+    vim -c ":CocInstall -sync coc-java" -c ":qall!"
 }
 
 sync_gui() {

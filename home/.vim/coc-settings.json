@@ -1,6 +1,6 @@
 {
     "codeLens.enable": true,
-    "coc.preferences.formatOnSaveFiletypes": ["rust"],
+    "coc.preferences.formatOnSaveFiletypes": ["rust", "java"],
 
     "rust-analyzer.lens.enable": true,
     "rust-analyzer.lens.run.enable": true,
@@ -12,6 +12,8 @@
     "rust-analyzer.inlayHints.typeHints.enable": false,
     // "rust-analyzer.debug.runtime": "vimspector",
     "rust-analyzer.debug.vimspector.configuration.name": "rust",
+
+    "java.inlayHints.parameterNames.enabled": "none",
 
     "languageserver": {
         "wgsl": {
