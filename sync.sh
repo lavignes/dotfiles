@@ -180,10 +180,12 @@ sync_gui() {
 
     sudo add-apt-repository -y ppa:papirus/papirus
     sudo add-apt-repository -y ppa:aslatter/ppa
+    sudo apt-add-repository -y ppa:neovim-ppa/unstable
     sudo apt update
 
     apt_install "papirus-icon-theme"
     apt_install "alacritty"
+    apt_install "neovim"
 
     rm -rf "$HOME/.config/alacritty"
     mkdir -p "$HOME/.config/alacritty"
