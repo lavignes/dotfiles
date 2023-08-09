@@ -12,6 +12,7 @@ Plug 'dhruvasagar/vim-table-mode'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'mg979/vim-visual-multi', { 'branch': 'master' }
+Plug 'fidian/hexmode'
 
 " languages
 Plug 'lavignes/az65-vim'
@@ -158,7 +159,8 @@ autocmd BufReadPost *
 " Make popup menu colors not hard to read
 hi Pmenu ctermbg=black ctermfg=white
 
-set termguicolors
+" use colors from terminal
+set notermguicolors
 set noswapfile
 set updatetime=300
 set nowrap
