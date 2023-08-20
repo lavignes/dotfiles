@@ -9,7 +9,9 @@ shell:
     - "tmux attach -t $(tmux ls | grep -v attached | head -1 | cut -d: -f1) || tmux"
 
 window:
-  decorations: Full
+  decorations: full
+  opacity: 0.95
+  resize_increments: true
   dimensions:
     columns: 80
     lines: 24
