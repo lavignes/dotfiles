@@ -66,8 +66,8 @@ let g:vimspector_configurations = {
 " make tables markdown-compatible
 let g:table_mode_corner='|'
 
-" ctrl+p to fzf
-nmap <C-P> :FZF<CR>
+" ctrl+p to fzf's :History
+nmap <C-P> :History<CR>
 
 " F1 toggles NERDTree
 nnoremap <F1> :NERDTreeMirror<CR>:NERDTreeToggle<CR>
@@ -112,6 +112,23 @@ vnoremap <C-c> :w !xclip -sel clipboard<CR><CR>
 
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" color switching
+let g:colors = getcompletion('', 'color')
+func! NextColors()
+    let idx = index(g:colors, g:colors_name)
+    let color = (idx + 1 >= len(g:colors) ? g:colors[0] : g:colors[idx + 1])
+    call popup_notification(color, #{ line: 4, col: 4, highlight: 'WildMenu' })
+    return color
+endfunc
+func! PrevColors()
+    let idx = index(g:colors, g:colors_name)
+    let color = (idx - 1 < 0 ? g:colors[-1] : g:colors[idx - 1])
+    call popup_notification(color, #{ line: 4, col: 4, highlight: 'WildMenu' })
+    return color
+endfunc
+nnoremap <M-F12> :exe "colo " .. NextColors()<CR>
+nnoremap <M-F11> :exe "colo " .. PrevColors()<CR>
 
 set background=dark
 " On first-run the colorscheme doesn't exist yet :-)
