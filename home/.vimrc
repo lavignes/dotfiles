@@ -17,6 +17,7 @@ Plug 'fidian/hexmode'
 " languages
 Plug 'lavignes/az65-vim'
 Plug 'lavignes/pasm.vim'
+Plug 'lavignes/chill.vim'
 Plug 'kylelaker/riscv.vim'
 Plug 'DingDean/wgsl.vim'
 
@@ -77,6 +78,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree")
 let NERDTreeMinimalUI=1
 let g:NERDTreeDirArrowExpandable = '+'
 let g:NERDTreeDirArrowCollapsible = '-'
+let NERDTreeIgnore=['\.o$'] " ignore certain files
 
 command! -nargs=0 Rename :call CocActionAsync('rename')
 command! -nargs=0 Fmt :call CocAction('format')
@@ -133,6 +135,8 @@ nnoremap <M-F11> :exe "colo " .. PrevColors()<CR>
 set background=dark
 " On first-run the colorscheme doesn't exist yet :-)
 silent! colorscheme jellybeans
+" transparent background
+" hi Normal guibg=NONE ctermbg=NONE
 
 " Set visual-multi colorscheme
 autocmd VimEnter * :VMTheme purplegray
