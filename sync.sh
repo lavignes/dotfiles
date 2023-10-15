@@ -140,6 +140,8 @@ sync_vim() {
     require_command "vim"
     sync_node
 
+    apt_install "clangd-15"
+
     apt_install "silversearcher-ag"
     ag_install
 
@@ -166,7 +168,7 @@ sync_vim() {
     sleep 5
     vim -c ":PlugInstall" -c ":qall!"
     vim -c ":CocInstall -sync coc-rust-analyzer" -c ":qall!"
-    vim -c ":CocInstall -sync coc-java" -c ":qall!"
+    vim -c ":CocInstall -sync coc-clangd" -c ":qall!"
 }
 
 sync_gui() {

@@ -33,6 +33,7 @@ let g:coc_config_home = '~/.vim/'
 packadd! termdebug
 let g:termdebug_wide=1
 autocmd FileType rust let termdebugger="rust-gdb"
+autocmd FileType c let termdebugger="gdb"
 
 sign define vimspectorBP text=o             texthl=WarningMsg
 sign define vimspectorBPCond text=o?        texthl=WarningMsg

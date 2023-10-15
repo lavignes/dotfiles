@@ -1,6 +1,8 @@
 {
     "codeLens.enable": true,
-    "coc.preferences.formatOnSaveFiletypes": ["rust", "java"],
+    "coc.preferences.formatOnSaveFiletypes": ["rust", "c"],
+
+    "clangd.arguments": ["--header-insertion=never", "--clang-tidy"],
 
     "rust-analyzer.lens.enable": true,
     "rust-analyzer.lens.run.enable": true,
@@ -10,10 +12,8 @@
     "rust-analyzer.inlayHints.closingBraceHints.enable": false,
     "rust-analyzer.inlayHints.parameterHints.enable": false,
     "rust-analyzer.inlayHints.typeHints.enable": false,
-    // "rust-analyzer.debug.runtime": "vimspector",
-    "rust-analyzer.debug.vimspector.configuration.name": "rust",
-
-    "java.inlayHints.parameterNames.enabled": "none",
+    //"rust-analyzer.debug.runtime": "vimspector",
+    //"rust-analyzer.debug.vimspector.configuration.name": "rust",
 
     "languageserver": {
         "wgsl": {
