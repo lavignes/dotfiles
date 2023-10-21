@@ -3,6 +3,7 @@
     "coc.preferences.formatOnSaveFiletypes": ["rust", "c"],
 
     "clangd.arguments": ["--header-insertion=never", "--clang-tidy"],
+    "clangd.inlayHints.enable": false,
 
     "rust-analyzer.lens.enable": true,
     "rust-analyzer.lens.run.enable": true,
