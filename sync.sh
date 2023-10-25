@@ -140,7 +140,7 @@ sync_vim() {
     require_command "vim"
     sync_node
 
-    apt_install "clangd-15"
+    apt_install "clangd"
 
     apt_install "silversearcher-ag"
     ag_install
