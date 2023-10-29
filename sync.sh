@@ -191,6 +191,7 @@ sync_gui() {
 
     apt_install "i3"
     apt_install "volumeicon-alsa"
+    apt_install "dunst"
 
     rm -rf "$HOME/.config/alacritty"
     mkdir -p "$HOME/.config/alacritty"
