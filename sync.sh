@@ -189,25 +189,24 @@ sync_gui() {
     apt_install "alacritty"
     apt_install "neovim"
 
+    apt_install "i3"
+    apt_install "volumeicon-alsa"
+
     rm -rf "$HOME/.config/alacritty"
     mkdir -p "$HOME/.config/alacritty"
     curl -sSLo "$HOME/.config/alacritty/alacritty.yml" "$dotfiles_url/home/.config/alacritty/alacritty.yml"
 
-    rm -f "$HOME/.local/share/fonts/Tamzen*"
-    mkdir -p "$HOME/.local/share/fonts"
-    git clone https://github.com/sunaku/tamzen-font.git "$workdir/tamzen-font"
-    find "$workdir/tamzen-font/otb" -name "*.otb" | while read f; do
-        mv -f "$f" "$HOME/.local/share/fonts/"
-    done;
-    fc-cache "$HOME/.local/share/fonts"
+    rm -rf "$HOME/.config/i3"
+    mkdir -p "$HOME/.config/i3"
+    curl -sSLo "$HOME/.config/i3/config" "$dotfiles_url/home/.config/i3/config"
 
-    sudo rm -f /etc/fonts/conf.d/70-no-bitmaps.conf
-    sudo rm -f /etc/fonts/conf.d/70-force-bitmaps.conf
-    sudo ln -s ../conf.avail/70-force-bitmaps.conf /etc/fonts/conf.d/
-    sudo dpkg-reconfigure fontconfig-config
-    sudo dpkg-reconfigure fontconfig
+    rm -rf "$HOME/.config/i3status"
+    mkdir -p "$HOME/.config/i3status"
+    curl -sSLo "$HOME/.config/i3status/config" "$dotfiles_url/home/.config/i3status/config"
 
-    apt_install "fonts-spleen"
+    rm -rf "$HOME/.config/rofi"
+    mkdir -p "$HOME/.config/rofi"
+    curl -sSLo "$HOME/.config/rofi/config.rasi" "$dotfiles_url/home/.config/rofi/config.rasi"
 
     echo "That's it! You should log out and log back in."
 }

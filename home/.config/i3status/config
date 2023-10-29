@@ -1,0 +1,41 @@
+general {
+    interval = 5
+    output_format = "i3bar"
+    colors = true
+    color_good = "#00FF00"
+    color_degraded = "#FFFF00"
+    color_bad = "#FF0000"
+}
+
+order += "battery all"
+order += "disk /"
+order += "cpu_usage"
+order += "memory"
+order += "tztime local"
+order += "volume master"
+
+battery all {
+    format = "%status %percentage %remaining"
+    format_down = ""
+}
+
+disk "/" {
+    format = "D: %percentage_used"
+}
+
+cpu_usage {
+    format = "CPU: %usage"
+}
+
+memory {
+    format = "M: %percentage_used"
+}
+
+tztime local {
+    format = "%Y-%m-%d %H:%M:%S"
+}
+
+volume master {
+    format = "♪: %volume"
+    format_muted = "♪: muted (%volume)"
+}
