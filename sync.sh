@@ -208,6 +208,10 @@ sync_gui() {
     mkdir -p "$HOME/.config/rofi"
     curl -sSLo "$HOME/.config/rofi/config.rasi" "$dotfiles_url/home/.config/rofi/config.rasi"
 
+    rm -rf "$HOME/.config/dunst"
+    mkdir -p "$HOME/.config/dunst"
+    curl -sSLo "$HOME/.config/dunst/dunstrc" "$dotfiles_url/home/.config/dunst/dunstrc"
+
     echo "That's it! You should log out and log back in."
 }
 
