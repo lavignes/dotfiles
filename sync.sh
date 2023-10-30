@@ -193,6 +193,8 @@ sync_gui() {
     apt_install "volumeicon-alsa"
     apt_install "dunst"
     apt_install "lxpolkit"
+    apt_install "picom"
+    apt_install "rofi"
 
     rm -rf "$HOME/.config/alacritty"
     mkdir -p "$HOME/.config/alacritty"
