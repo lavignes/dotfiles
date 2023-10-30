@@ -6,6 +6,9 @@ exec --no-startup-id lxpolkit
 # STB color
 exec --no-startup-id xsetroot -solid "#554770"
 
+# compositing
+exec --no-startup-id picom --experimental-backends
+
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock -c 554770 --nofork
 bindsym $mod+l exec --no-startup-id loginctl lock-session
 

@@ -200,6 +200,10 @@ sync_gui() {
     mkdir -p "$HOME/.config/alacritty"
     curl -sSLo "$HOME/.config/alacritty/alacritty.yml" "$dotfiles_url/home/.config/alacritty/alacritty.yml"
 
+    rm -rf "$HOME/.config/picom"
+    mkdir -p "$HOME/.config/picom"
+    curl -sSLo "$HOME/.config/picom/picom.conf" "$dotfiles_url/home/.config/picom/picom.conf"
+
     rm -rf "$HOME/.config/i3"
     mkdir -p "$HOME/.config/i3"
     curl -sSLo "$HOME/.config/i3/config" "$dotfiles_url/home/.config/i3/config"
