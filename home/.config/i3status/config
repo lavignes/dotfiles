@@ -7,35 +7,33 @@ general {
     color_bad = "#FF0000"
 }
 
-order += "battery all"
+order += "battery 0"
 order += "disk /"
 order += "cpu_usage"
 order += "memory"
 order += "tztime local"
-order += "volume master"
 
-battery all {
+battery 0 {
     format = "%status %percentage %remaining"
     format_down = ""
+    status_chr = "🔌"
+    status_bat = "🔋"
+    status_unk = "❔"
+    status_full = "🔋"
 }
 
 disk "/" {
-    format = "D: %percentage_used"
+    format = "💾: %percentage_used"
 }
 
 cpu_usage {
-    format = "CPU: %usage"
+    format = "👀: %usage"
 }
 
 memory {
-    format = "M: %percentage_used"
+    format = "🚽: %percentage_used"
 }
 
 tztime local {
-    format = "%Y-%m-%d %H:%M:%S"
-}
-
-volume master {
-    format = "♪: %volume"
-    format_muted = "♪: muted (%volume)"
+    format = "%Y-%m-%d %I:%M:%S %p"
 }
