@@ -198,6 +198,7 @@ sync_gui() {
         apt_install "neovim"
 
         apt_install "i3"
+        apt_install "i3lock"
         apt_install "volumeicon-alsa"
         apt_install "dunst"
         apt_install "lxpolkit"
