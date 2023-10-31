@@ -23,12 +23,16 @@ fi
 
 confirm() {
     echo "$1"
-    echo "Is this ok (y/n)?"
+    echo "Is this ok [y]es/[n]o/[s]kip ?"
     read -r choice
     case "$choice" in
         y|yes|Y)
+            return 0
             ;;
 
+        s|skip|S)
+            return 1
+            ;;
         *)
             echo "Exiting..."
             exit 1
@@ -37,6 +41,9 @@ confirm() {
 }
 
 apt_install() {
+    if [ -x "$(command -v "$2")" ]; then
+        return
+    fi
     if [ -x "$(command -v "$1")" ]; then
         return
     fi
@@ -63,10 +70,10 @@ sync_git() {
     yum_install "git"
     require_command "git"
 
-    confirm "I will now replace your git configuration."
-
-    rm -f "$HOME/.gitconfig"
-    curl -sSLo "$HOME/.gitconfig" "$dotfiles_url/home/.gitconfig"
+    if confirm "I will now replace your git configuration."; then
+        rm -f "$HOME/.gitconfig"
+        curl -sSLo "$HOME/.gitconfig" "$dotfiles_url/home/.gitconfig"
+    fi
 }
 
 sync_shell() {
@@ -74,44 +81,45 @@ sync_shell() {
     yum_install "zsh"
     require_command "zsh"
 
-    confirm "I will now reinstall oh-my-zsh and replace your zsh configuration."
+    if confirm "I will now reinstall oh-my-zsh and replace your zsh configuration."; then
+        rm -rf "$HOME/.oh-my-zsh"
+        rm -f "$HOME/.zshrc"
 
-    rm -rf "$HOME/.oh-my-zsh"
-    rm -f "$HOME/.zshrc"
+        curl -sSLo "$workdir/install.sh" "https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
+        chmod +x "$workdir/install.sh"
+        "$workdir/install.sh" "" "--unattended"
+        curl -sSLo "$HOME/.zshrc" "$dotfiles_url/home/.zshrc"
 
-    curl -sSLo "$workdir/install.sh" "https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
-    chmod +x "$workdir/install.sh"
-    "$workdir/install.sh" "" "--unattended"
-    curl -sSLo "$HOME/.zshrc" "$dotfiles_url/home/.zshrc"
+        if [ "$(basename "$SHELL")" != "zsh" ]; then
+            echo "The current shell does not seem like zsh. I can fix that..."
+            echo "You'll probably have to provide a password :("
+            chsh -s "$(command -v zsh)"
+        fi
 
-    if [ "$(basename "$SHELL")" != "zsh" ]; then
-        echo "The current shell does not seem like zsh. I can fix that..."
-        echo "You'll probably have to provide a password :("
-        chsh -s "$(command -v zsh)"
+        apt_install "tmux"
+        yum_install "tmux"
+        rm -f "$HOME/.tmux.conf"
+        curl -sSLo "$HOME/.tmux.conf" "$dotfiles_url/home/.tmux.conf"
     fi
-
-    apt_install "tmux"
-    yum_install "tmux"
-    rm -f "$HOME/.tmux.conf"
-    curl -sSLo "$HOME/.tmux.conf" "$dotfiles_url/home/.tmux.conf"
 }
 
 sync_node() {
-    confirm "I will now install nvm and update to the latest nodejs."
-
-    eval "$(curl -sSL "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh")"
-    NVM_DIR="$HOME/.nvm"
-    # shellcheck source=/dev/null
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    nvm install 16
-    nvm use 16
-    nvm alias default 16
+    if confirm "I will now install nvm and update to the latest nodejs."; then
+        eval "$(curl -sSL "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh")"
+        NVM_DIR="$HOME/.nvm"
+        # shellcheck source=/dev/null
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        nvm install 16
+        nvm use 16
+        nvm alias default 16
+    fi
 }
 
 sync_rust() {
-    confirm "I will now install rustup and cargo."
-    curl -sSL "https://sh.rustup.rs" | sh -s -- --no-modify-path -y
-    export PATH="$HOME/.cargo/bin:$PATH"
+    if confirm "I will now install rustup and cargo."; then
+        curl -sSL "https://sh.rustup.rs" | sh -s -- --no-modify-path -y
+        export PATH="$HOME/.cargo/bin:$PATH"
+    fi
 }
 
 ag_install() {
@@ -142,33 +150,34 @@ sync_vim() {
 
     apt_install "clangd"
 
-    apt_install "silversearcher-ag"
+    apt_install "silversearcher-ag" "ag"
     ag_install
 
-    confirm "I will now replace your vim configuration."
-    rm -rf "$HOME/.vim"
-    rm -f "$HOME/.vimrc"
-    rm -rf "$HOME/.config/nvim"
+    if confirm "I will now replace your vim configuration."; then
+        rm -rf "$HOME/.vim"
+        rm -f "$HOME/.vimrc"
+        rm -rf "$HOME/.config/nvim"
 
-    curl -sSLo "$HOME/.vimrc" "$dotfiles_url/home/.vimrc"
-    curl -sSLo "$HOME/.config/nvim/init.vim" --create-dirs \
-        "$dotfiles_url/home/.config/nvim/init.vim"
-    curl -sSLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
-        "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+        curl -sSLo "$HOME/.vimrc" "$dotfiles_url/home/.vimrc"
+        curl -sSLo "$HOME/.config/nvim/init.vim" --create-dirs \
+            "$dotfiles_url/home/.config/nvim/init.vim"
+        curl -sSLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
+            "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
 
-    set -- "coc-settings.json"
-    for f in "$@"; do
-        curl -sSLo "$HOME/.vim/$f" "$dotfiles_url/home/.vim/$f"
-    done
+        set -- "coc-settings.json"
+        for f in "$@"; do
+            curl -sSLo "$HOME/.vim/$f" "$dotfiles_url/home/.vim/$f"
+        done
 
-    cargo install --git https://github.com/wgsl-analyzer/wgsl-analyzer wgsl_analyzer
+        cargo install --git https://github.com/wgsl-analyzer/wgsl-analyzer wgsl_analyzer
 
-    echo "This will look weird. But in 5 seconds I will start vim and set it up."
-    echo "Don't worry, it will close right afterward..."
-    sleep 5
-    vim -c ":PlugInstall" -c ":qall!"
-    vim -c ":CocInstall -sync coc-rust-analyzer" -c ":qall!"
-    vim -c ":CocInstall -sync coc-clangd" -c ":qall!"
+        echo "This will look weird. But in 5 seconds I will start vim and set it up."
+        echo "Don't worry, it will close right afterward..."
+        sleep 5
+        vim -c ":PlugInstall" -c ":qall!"
+        vim -c ":CocInstall -sync coc-rust-analyzer" -c ":qall!"
+        vim -c ":CocInstall -sync coc-clangd" -c ":qall!"
+    fi
 }
 
 sync_gui() {
@@ -178,48 +187,49 @@ sync_gui() {
         return
     fi
 
-    confirm "All the basic stuff is done. I can now setup the gui."
+    if confirm "All the basic stuff is done. I can now setup the gui."; then
+        sudo add-apt-repository -y ppa:papirus/papirus
+        sudo add-apt-repository -y ppa:aslatter/ppa
+        sudo apt-add-repository -y ppa:neovim-ppa/unstable
+        sudo apt update
 
-    sudo add-apt-repository -y ppa:papirus/papirus
-    sudo add-apt-repository -y ppa:aslatter/ppa
-    sudo apt-add-repository -y ppa:neovim-ppa/unstable
-    sudo apt update
+        apt_install "papirus-icon-theme"
+        apt_install "alacritty"
+        apt_install "neovim"
 
-    apt_install "papirus-icon-theme"
-    apt_install "alacritty"
-    apt_install "neovim"
+        apt_install "i3"
+        apt_install "volumeicon-alsa"
+        apt_install "dunst"
+        apt_install "lxpolkit"
+        apt_install "picom"
+        apt_install "rofi"
+        apt_install "hsetroot"
 
-    apt_install "i3"
-    apt_install "volumeicon-alsa"
-    apt_install "dunst"
-    apt_install "lxpolkit"
-    apt_install "picom"
-    apt_install "rofi"
+        rm -rf "$HOME/.config/alacritty"
+        mkdir -p "$HOME/.config/alacritty"
+        curl -sSLo "$HOME/.config/alacritty/alacritty.yml" "$dotfiles_url/home/.config/alacritty/alacritty.yml"
 
-    rm -rf "$HOME/.config/alacritty"
-    mkdir -p "$HOME/.config/alacritty"
-    curl -sSLo "$HOME/.config/alacritty/alacritty.yml" "$dotfiles_url/home/.config/alacritty/alacritty.yml"
+        rm -rf "$HOME/.config/picom"
+        mkdir -p "$HOME/.config/picom"
+        curl -sSLo "$HOME/.config/picom/picom.conf" "$dotfiles_url/home/.config/picom/picom.conf"
 
-    rm -rf "$HOME/.config/picom"
-    mkdir -p "$HOME/.config/picom"
-    curl -sSLo "$HOME/.config/picom/picom.conf" "$dotfiles_url/home/.config/picom/picom.conf"
+        rm -rf "$HOME/.config/i3"
+        mkdir -p "$HOME/.config/i3"
+        curl -sSLo "$HOME/.config/i3/config" "$dotfiles_url/home/.config/i3/config"
 
-    rm -rf "$HOME/.config/i3"
-    mkdir -p "$HOME/.config/i3"
-    curl -sSLo "$HOME/.config/i3/config" "$dotfiles_url/home/.config/i3/config"
+        rm -rf "$HOME/.config/i3status"
+        mkdir -p "$HOME/.config/i3status"
+        curl -sSLo "$HOME/.config/i3status/config" "$dotfiles_url/home/.config/i3status/config"
 
-    rm -rf "$HOME/.config/i3status"
-    mkdir -p "$HOME/.config/i3status"
-    curl -sSLo "$HOME/.config/i3status/config" "$dotfiles_url/home/.config/i3status/config"
+        rm -rf "$HOME/.config/rofi"
+        mkdir -p "$HOME/.config/rofi"
+        curl -sSLo "$HOME/.config/rofi/config.rasi" "$dotfiles_url/home/.config/rofi/config.rasi"
 
-    rm -rf "$HOME/.config/rofi"
-    mkdir -p "$HOME/.config/rofi"
-    curl -sSLo "$HOME/.config/rofi/config.rasi" "$dotfiles_url/home/.config/rofi/config.rasi"
+        rm -rf "$HOME/.config/dunst"
+        mkdir -p "$HOME/.config/dunst"
+        curl -sSLo "$HOME/.config/dunst/dunstrc" "$dotfiles_url/home/.config/dunst/dunstrc"
 
-    rm -rf "$HOME/.config/dunst"
-    mkdir -p "$HOME/.config/dunst"
-    curl -sSLo "$HOME/.config/dunst/dunstrc" "$dotfiles_url/home/.config/dunst/dunstrc"
-
+    fi
     echo "That's it! You should log out and log back in."
 }
 
