@@ -180,6 +180,19 @@ sync_vim() {
     fi
 }
 
+install_i3() {
+    if [ -x "$(command -v "i3")" ]; then
+        return
+    fi
+    /usr/lib/apt/apt-helper download-file https://debian.sur5r.net/i3/pool/main/s/sur5r-keyring/sur5r-keyring_2023.02.18_all.deb "$workdir/keyring.deb" SHA256:a511ac5f10cd811f8a4ca44d665f2fa1add7a9f09bef238cdfad8461f5239cc4
+    sudo apt install "$workdir/keyring.deb"
+    echo "deb http://debian.sur5r.net/i3/ $(grep '^DISTRIB_CODENAME=' /etc/lsb-release | cut -f2 -d=) universe" | sudo tee /etc/apt/sources.list.d/sur5r-i3.list
+    sudo apt update
+
+    apt_install "i3"
+    apt_install "i3lock"
+}
+
 sync_gui() {
     if [ -z "$XDG_SESSION_TYPE" ]; then
         echo "I don't think you have a gui..."
@@ -197,13 +210,8 @@ sync_gui() {
         apt_install "alacritty"
         apt_install "neovim"
 
-        /usr/lib/apt/apt-helper download-file https://debian.sur5r.net/i3/pool/main/s/sur5r-keyring/sur5r-keyring_2023.02.18_all.deb "$workdir/keyring.deb" SHA256:a511ac5f10cd811f8a4ca44d665f2fa1add7a9f09bef238cdfad8461f5239cc4
-        sudo apt install "$workdir/keyring.deb"
-        echo "deb http://debian.sur5r.net/i3/ $(grep '^DISTRIB_CODENAME=' /etc/lsb-release | cut -f2 -d=) universe" | sudo tee /etc/apt/sources.list.d/sur5r-i3.list
-        sudo apt update
+        install_i3
 
-        apt_install "i3"
-        apt_install "i3lock"
         apt_install "volumeicon-alsa"
         apt_install "dunst"
         apt_install "lxpolkit"
@@ -239,6 +247,10 @@ sync_gui() {
         mkdir -p "$HOME/.config/dunst"
         curl -sSLo "$HOME/.config/dunst/dunstrc" "$dotfiles_url/home/.config/dunst/dunstrc"
 
+        rm -f "$HOME/.gtkrc-2.0"
+        rm -rf "$HOME/.config/gtk-3.0"
+        curl -sSLo "$HOME/.gtkrc-2.0" "$dotfiles_url/home/.gtkrc-2.0"
+        curl -sSLo "$HOME/.config/gtk-3.0" "$dotfiles_url/home/.config/gtk-3.0/settings.ini"
     fi
     echo "That's it! You should log out and log back in."
 }
