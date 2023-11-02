@@ -218,6 +218,7 @@ sync_gui() {
         apt_install "picom"
         apt_install "rofi"
         apt_install "hsetroot"
+        apt_install "pavucontrol"
 
         rm -rf "$HOME/.config/volumeicon"
         mkdir -p "$HOME/.config/volumeicon"
