@@ -8,7 +8,7 @@ exec --no-startup-id hsetroot -solid "#222222"
 # compositing
 exec --no-startup-id picom --experimental-backends
 
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock -c 554770 --nofork
+exec --no-startup-id xss-lock --transfer-sleep-lock -- slock
 bindsym $mod+l exec --no-startup-id loginctl lock-session
 
 exec --no-startup-id volumeicon

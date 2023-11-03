@@ -190,7 +190,7 @@ install_i3() {
     sudo apt update
 
     apt_install "i3"
-    apt_install "i3lock"
+    apt_install "suckless-tools"
 }
 
 sync_gui() {
