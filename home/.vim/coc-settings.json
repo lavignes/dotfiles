@@ -1,8 +1,9 @@
 {
     "codeLens.enable": true,
+    "inlayHint.enable": false,
     "coc.preferences.formatOnSaveFiletypes": ["rust", "c"],
 
-    "clangd.arguments": ["--header-insertion=never", "--clang-tidy"],
+    "clangd.arguments": ["--header-insertion=never", "--inlay-hints=false", "--clang-tidy"],
     "clangd.inlayHints.enable": false,
 
     "rust-analyzer.lens.enable": true,
@@ -13,13 +14,12 @@
     "rust-analyzer.inlayHints.closingBraceHints.enable": false,
     "rust-analyzer.inlayHints.parameterHints.enable": false,
     "rust-analyzer.inlayHints.typeHints.enable": false,
-    //"rust-analyzer.debug.runtime": "vimspector",
-    //"rust-analyzer.debug.vimspector.configuration.name": "rust",
 
     "languageserver": {
         "wgsl": {
             "command": "wgsl_analyzer",
             "filetypes": ["wgsl"]
          }
-    }
+    },
+    "clangd.path": "~/.config/coc/extensions/coc-clangd-data/install/17.0.3/clangd_17.0.3/bin/clangd"
 }

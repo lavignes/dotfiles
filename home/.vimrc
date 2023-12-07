@@ -5,7 +5,6 @@ call plug#begin('~/.vim/plugged')
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'itchyny/lightline.vim'
 Plug 'preservim/nerdtree'
-Plug 'puremourning/vimspector'
 
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'dhruvasagar/vim-table-mode'
@@ -15,6 +14,7 @@ Plug 'mg979/vim-visual-multi', { 'branch': 'master' }
 Plug 'fidian/hexmode'
 
 " languages
+Plug 'bfrg/vim-cpp-modern'
 Plug 'lavignes/az65-vim'
 Plug 'lavignes/pasm.vim'
 Plug 'lavignes/chill.vim'
@@ -30,43 +30,18 @@ call plug#end()
 " ensure vim and nvim use the same coc-config
 let g:coc_config_home = '~/.vim/'
 
+autocmd BufRead,BufNewFile *.h,*.c set filetype=c
+
 packadd! termdebug
 let g:termdebug_wide=1
 autocmd FileType rust let termdebugger="rust-gdb"
 autocmd FileType c let termdebugger="gdb"
 
-sign define vimspectorBP text=o             texthl=WarningMsg
-sign define vimspectorBPCond text=o?        texthl=WarningMsg
-sign define vimspectorBPLog text=!!         texthl=SpellRare
-sign define vimspectorBPDisabled text=o!    texthl=LineNr
-sign define vimspectorPC text=\ >           texthl=MatchParen
-sign define vimspectorPCBP text=o>          texthl=MatchParen
-sign define vimspectorCurrentThread text=>  texthl=MatchParen
-sign define vimspectorCurrentFrame text=>   texthl=Special
-
-let g:vimspector_enable_mappings = 'HUMAN'
-let g:vimspector_configurations = {
-    \ 'rust': {
-    \   'adapter': 'CodeLLDB',
-    \   'filetypes': [ 'rust' ],
-    \   'configuration': {
-    \     'type': 'lldb',
-    \     'request': 'launch',
-    \     'program': '${Executable}',
-    \     'args': [ '*${Args}' ],
-    \     'sourceLanguages': [ 'rust' ],
-    \     'breakpoints': {
-    \       'exception': {
-    \         'cpp_throw': 'Y',
-    \         'cpp_catch': 'N',
-    \       },
-    \     },
-    \   },
-    \ },
-    \ }
-
 " make tables markdown-compatible
 let g:table_mode_corner='|'
+
+" vim-cpp-modern settings
+let g:cpp_member_highlight = 1
 
 " ctrl+p to fzf's :History
 nmap <C-P> :History<CR>
@@ -79,7 +54,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree")
 let NERDTreeMinimalUI=1
 let g:NERDTreeDirArrowExpandable = '+'
 let g:NERDTreeDirArrowCollapsible = '-'
-let NERDTreeIgnore=['\.o$'] " ignore certain files
+let NERDTreeIgnore=['\.o$', '\.d$'] " ignore certain files
 
 command! -nargs=0 Rename :call CocActionAsync('rename')
 command! -nargs=0 Fmt :call CocAction('format')
@@ -136,6 +111,7 @@ nnoremap <M-F11> :exe "colo " .. PrevColors()<CR>
 set background=dark
 " On first-run the colorscheme doesn't exist yet :-)
 silent! colorscheme jellybeans
+"silent! colorscheme onehalfdark
 " transparent background
 " hi Normal guibg=NONE ctermbg=NONE
 
