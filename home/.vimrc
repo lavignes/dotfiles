@@ -26,6 +26,7 @@ Plug 'rafi/awesome-vim-colorschemes'
 Plug 'lmintmate/blue-mood-vim'
 Plug 'sainnhe/everforest'
 Plug 'mcchrish/zenbones.nvim'
+Plug 'hardselius/warlock'
 call plug#end()
 
 " ensure vim and nvim use the same coc-config
@@ -111,7 +112,9 @@ nnoremap <M-F11> :exe "colo " .. PrevColors()<CR>
 
 set background=dark
 " On first-run the colorscheme doesn't exist yet :-)
-silent! colorscheme mountaineer
+silent! colorscheme warlock
+" foce comments to always be italic
+highlight Comment cterm=italic
 " transparent background
 " hi Normal guibg=NONE ctermbg=NONE
 
@@ -119,7 +122,7 @@ silent! colorscheme mountaineer
 autocmd VimEnter * :VMTheme purplegray
 
 let g:lightline = {
-	\ 'colorscheme': 'mountaineer',
+	\ 'colorscheme': 'default',
 	\ 'active': {
 	\   'left': [ [ 'mode', 'paste' ],
 	\             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
