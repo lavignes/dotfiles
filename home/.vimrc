@@ -25,6 +25,7 @@ Plug 'DingDean/wgsl.vim'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'lmintmate/blue-mood-vim'
 Plug 'sainnhe/everforest'
+Plug 'mcchrish/zenbones.nvim'
 call plug#end()
 
 " ensure vim and nvim use the same coc-config
@@ -156,8 +157,8 @@ autocmd BufReadPost *
 " Make popup menu colors not hard to read
 hi Pmenu ctermbg=black ctermfg=white
 
-" use colors from terminal
-set notermguicolors
+" don't use colors from terminal
+set termguicolors
 set noswapfile
 set updatetime=300
 set nowrap
