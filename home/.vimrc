@@ -113,10 +113,15 @@ nnoremap <M-F11> :exe "colo " .. PrevColors()<CR>
 set background=dark
 " On first-run the colorscheme doesn't exist yet :-)
 silent! colorscheme warlock
-" foce comments to always be italic
+" make warlock bg a little darker
+hi Normal ctermbg=234 guibg=#1c1c1c
+
+" Make popup menu colors not hard to read
+hi Pmenu ctermbg=black ctermfg=white
+hi Pmenu guibg=black guifg=white
+
+" force comments to always be italic
 highlight Comment cterm=italic
-" transparent background
-" hi Normal guibg=NONE ctermbg=NONE
 
 " Set visual-multi colorscheme
 autocmd VimEnter * :VMTheme purplegray
@@ -156,9 +161,6 @@ autocmd BufReadPost *
      \ if line("'\"") > 0 && line("'\"") <= line("$") |
      \   exe "normal! g`\"" |
      \ endif
-
-" Make popup menu colors not hard to read
-hi Pmenu ctermbg=black ctermfg=white
 
 " don't use colors from terminal
 set termguicolors
