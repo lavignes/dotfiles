@@ -16,7 +16,7 @@ Plug 'fidian/hexmode'
 " languages
 Plug 'bfrg/vim-cpp-modern'
 Plug 'lavignes/az65-vim'
-Plug 'lavignes/pasm.vim'
+Plug 'lavignes/possum16', { 'rtp': 'vim' }
 Plug 'lavignes/chill.vim'
 Plug 'kylelaker/riscv.vim'
 Plug 'DingDean/wgsl.vim'
@@ -110,8 +110,7 @@ nnoremap <M-F11> :exe "colo " .. PrevColors()<CR>
 
 set background=dark
 " On first-run the colorscheme doesn't exist yet :-)
-silent! colorscheme jellybeans
-"silent! colorscheme onehalfdark
+silent! colorscheme mountaineer
 " transparent background
 " hi Normal guibg=NONE ctermbg=NONE
 
@@ -119,7 +118,7 @@ silent! colorscheme jellybeans
 autocmd VimEnter * :VMTheme purplegray
 
 let g:lightline = {
-	\ 'colorscheme': 'jellybeans',
+	\ 'colorscheme': 'mountaineer',
 	\ 'active': {
 	\   'left': [ [ 'mode', 'paste' ],
 	\             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
