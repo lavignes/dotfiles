@@ -112,22 +112,23 @@ nnoremap <M-F11> :exe "colo " .. PrevColors()<CR>
 
 set background=dark
 " On first-run the colorscheme doesn't exist yet :-)
-silent! colorscheme warlock
-" make warlock bg a little darker
-hi Normal ctermbg=234 guibg=#1c1c1c
+silent! colorscheme nord
+" make bg a little darker
+hi Normal guibg=#20242c
 
 " Make popup menu colors not hard to read
-hi Pmenu ctermbg=black ctermfg=white
-hi Pmenu guibg=black guifg=white
+" hi Pmenu ctermbg=black ctermfg=white
+" hi Pmenu guibg=black guifg=white
 
-" force comments to always be italic
-highlight Comment cterm=italic
+" force style on some items
+hi Comment cterm=italic
+hi PreProc cterm=bold,italic
 
 " Set visual-multi colorscheme
 autocmd VimEnter * :VMTheme purplegray
 
 let g:lightline = {
-	\ 'colorscheme': 'default',
+	\ 'colorscheme': 'nord',
 	\ 'active': {
 	\   'left': [ [ 'mode', 'paste' ],
 	\             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
