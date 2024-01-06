@@ -1,0 +1,4 @@
+#!/bin/sh
+
+pid=$(xprop -notype _NET_WM_PID | cut -d " " -f 3)
+/bin/kill "$1" "$pid"
