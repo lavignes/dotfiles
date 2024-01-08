@@ -254,6 +254,7 @@ sync_gui() {
         curl -sSLo "$HOME/.config/gtk-3.0" "$dotfiles_url/home/.config/gtk-3.0/settings.ini"
     fi
     if confirm "If you're using an apple keyboard driver, I can configure it to act right on linux"; then
+        echo 2 | sudo tee /sys/module/hid_apple/parameters/fnmode
         echo "options hid_apple fnmode=2" | sudo tee -a /etc/modprobe.d/hid_apple.conf
         sudo update-initramfs -u -k all
     fi
