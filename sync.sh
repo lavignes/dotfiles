@@ -226,7 +226,7 @@ sync_gui() {
 
         rm -rf "$HOME/.config/alacritty"
         mkdir -p "$HOME/.config/alacritty"
-        curl -sSLo "$HOME/.config/alacritty/alacritty.yml" "$dotfiles_url/home/.config/alacritty/alacritty.yml"
+        curl -sSLo "$HOME/.config/alacritty/alacritty.toml" "$dotfiles_url/home/.config/alacritty/alacritty.toml"
 
         rm -rf "$HOME/.config/picom"
         mkdir -p "$HOME/.config/picom"
