@@ -197,6 +197,8 @@ sync_gui() {
         apt_install "alacritty"
         apt_install "neovim"
 
+        papirus-folders -t Papirus-Dark -C violet
+
         rm -rf "$HOME/.config/alacritty"
         mkdir -p "$HOME/.config/alacritty"
         curl -sSLo "$HOME/.config/alacritty/alacritty.toml" "$dotfiles_url/home/.config/alacritty/alacritty.toml"
