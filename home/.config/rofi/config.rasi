@@ -1,9 +1,0 @@
-configuration {
-    dpi: 220;
-    combi-modi: "window,drun";
-    font: "monospace 10";
-    icon-theme: "Papirus";
-    show-icons: true;
-}
-
-@theme "default"

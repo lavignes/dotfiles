@@ -180,19 +180,6 @@ sync_vim() {
     fi
 }
 
-install_i3() {
-    if [ -x "$(command -v "i3")" ]; then
-        return
-    fi
-    /usr/lib/apt/apt-helper download-file https://debian.sur5r.net/i3/pool/main/s/sur5r-keyring/sur5r-keyring_2023.02.18_all.deb "$workdir/keyring.deb" SHA256:a511ac5f10cd811f8a4ca44d665f2fa1add7a9f09bef238cdfad8461f5239cc4
-    sudo apt install "$workdir/keyring.deb"
-    echo "deb http://debian.sur5r.net/i3/ $(grep '^DISTRIB_CODENAME=' /etc/lsb-release | cut -f2 -d=) universe" | sudo tee /etc/apt/sources.list.d/sur5r-i3.list
-    sudo apt update
-
-    apt_install "i3"
-    apt_install "suckless-tools"
-}
-
 sync_gui() {
     if [ -z "$XDG_SESSION_TYPE" ]; then
         echo "I don't think you have a gui..."
@@ -210,43 +197,9 @@ sync_gui() {
         apt_install "alacritty"
         apt_install "neovim"
 
-        install_i3
-
-        apt_install "volumeicon-alsa"
-        apt_install "dunst"
-        apt_install "lxpolkit"
-        apt_install "picom"
-        apt_install "rofi"
-        apt_install "hsetroot"
-        apt_install "pavucontrol"
-
-        rm -rf "$HOME/.config/volumeicon"
-        mkdir -p "$HOME/.config/volumeicon"
-        curl -sSLo "$HOME/.config/volumeicon/volumeicon" "$dotfiles_url/home/.config/volumeicon/volumeicon"
-
         rm -rf "$HOME/.config/alacritty"
         mkdir -p "$HOME/.config/alacritty"
         curl -sSLo "$HOME/.config/alacritty/alacritty.toml" "$dotfiles_url/home/.config/alacritty/alacritty.toml"
-
-        rm -rf "$HOME/.config/picom"
-        mkdir -p "$HOME/.config/picom"
-        curl -sSLo "$HOME/.config/picom/picom.conf" "$dotfiles_url/home/.config/picom/picom.conf"
-
-        rm -rf "$HOME/.config/i3"
-        mkdir -p "$HOME/.config/i3"
-        curl -sSLo "$HOME/.config/i3/config" "$dotfiles_url/home/.config/i3/config"
-
-        rm -rf "$HOME/.config/i3status"
-        mkdir -p "$HOME/.config/i3status"
-        curl -sSLo "$HOME/.config/i3status/config" "$dotfiles_url/home/.config/i3status/config"
-
-        rm -rf "$HOME/.config/rofi"
-        mkdir -p "$HOME/.config/rofi"
-        curl -sSLo "$HOME/.config/rofi/config.rasi" "$dotfiles_url/home/.config/rofi/config.rasi"
-
-        rm -rf "$HOME/.config/dunst"
-        mkdir -p "$HOME/.config/dunst"
-        curl -sSLo "$HOME/.config/dunst/dunstrc" "$dotfiles_url/home/.config/dunst/dunstrc"
 
         rm -f "$HOME/.gtkrc-2.0"
         rm -rf "$HOME/.config/gtk-3.0"
