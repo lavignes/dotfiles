@@ -207,6 +207,10 @@ sync_gui() {
         rm -rf "$HOME/.config/gtk-3.0"
         curl -sSLo "$HOME/.gtkrc-2.0" "$dotfiles_url/home/.gtkrc-2.0"
         curl -sSLo "$HOME/.config/gtk-3.0" "$dotfiles_url/home/.config/gtk-3.0/settings.ini"
+
+        # set the STB background color
+        gsettings set org.gnome.desktop.background picture-options 'none'
+        gsettings set org.gnome.desktop.background primary-color '#554770'
     fi
     if confirm "If you're using an apple keyboard driver, I can configure it to act right on linux"; then
         echo 2 | sudo tee /sys/module/hid_apple/parameters/fnmode
