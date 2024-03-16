@@ -15,9 +15,7 @@ Plug 'fidian/hexmode'
 
 " languages
 Plug 'bfrg/vim-cpp-modern'
-Plug 'lavignes/az65-vim'
-Plug 'lavignes/possum16', { 'rtp': 'vim' }
-Plug 'lavignes/chill.vim'
+Plug 'lavignes/snesgame', { 'rtp': 'tools/asm/vim' }
 Plug 'kylelaker/riscv.vim'
 Plug 'DingDean/wgsl.vim'
 
