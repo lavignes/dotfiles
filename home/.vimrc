@@ -16,6 +16,7 @@ Plug 'fidian/hexmode'
 " languages
 Plug 'bfrg/vim-cpp-modern'
 Plug 'lavignes/snesgame', { 'rtp': 'tools/asm/vim' }
+Plug 'lavignes/gbgame', { 'rtp': 'tools/asm/vim' }
 Plug 'kylelaker/riscv.vim'
 Plug 'DingDean/wgsl.vim'
 
@@ -123,7 +124,7 @@ hi Comment cterm=italic
 hi PreProc cterm=bold,italic
 
 " Set visual-multi colorscheme
-autocmd VimEnter * :VMTheme purplegray
+autocmd VimEnter * :VMTheme nord
 
 let g:lightline = {
 	\ 'colorscheme': 'nord',
