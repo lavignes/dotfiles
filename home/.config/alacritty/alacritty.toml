@@ -20,10 +20,10 @@ lines = 24
 blinking = "Always"
 
 [font]
-size = 14
+size = 16
 
 [font.normal]
-family = "ComicCode"
+family = "Perfect DOS VGA 437 Win"
 
 [colors.bright]
 black = "0x414166"

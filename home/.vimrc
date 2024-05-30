@@ -17,6 +17,7 @@ Plug 'fidian/hexmode'
 Plug 'bfrg/vim-cpp-modern'
 Plug 'lavignes/snesgame', { 'rtp': 'tools/asm/vim' }
 Plug 'lavignes/gbgame', { 'rtp': 'tools/asm/vim' }
+Plug 'jgm/djot', { 'rtp': 'editors/vim' }
 Plug 'kylelaker/riscv.vim'
 Plug 'DingDean/wgsl.vim'
 
@@ -111,9 +112,9 @@ nnoremap <M-F11> :exe "colo " .. PrevColors()<CR>
 
 set background=dark
 " On first-run the colorscheme doesn't exist yet :-)
-silent! colorscheme nord
+silent! colorscheme jellybeans
 " make bg a little darker
-hi Normal guibg=#20242c
+" hi Normal guibg=#20242c
 
 " Make popup menu colors not hard to read
 " hi Pmenu ctermbg=black ctermfg=white
@@ -127,7 +128,7 @@ hi PreProc cterm=bold,italic
 autocmd VimEnter * :VMTheme nord
 
 let g:lightline = {
-	\ 'colorscheme': 'nord',
+	\ 'colorscheme': 'jellybeans',
 	\ 'active': {
 	\   'left': [ [ 'mode', 'paste' ],
 	\             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
@@ -180,7 +181,7 @@ set splitright
 set number
 set wildmenu
 set wildmode=longest,full
-set colorcolumn=100
+set colorcolumn=80
 set expandtab
 set shiftwidth=4
 set tabstop=4

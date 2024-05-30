@@ -199,6 +199,10 @@ sync_gui() {
 
         papirus-folders -t Papirus-Dark -C violet
 
+        mkdir -p "$HOME/.local/share/fonts"
+        curl -sSLo "$HOME/.local/share/fonts/PerfectDOSVGA437Win.ttf" "$dotfiles_url/home/.local/share/fonts/PerfectDOSVGA437Win.ttf"
+        fc-cache -f
+
         rm -rf "$HOME/.config/alacritty"
         mkdir -p "$HOME/.config/alacritty"
         curl -sSLo "$HOME/.config/alacritty/alacritty.toml" "$dotfiles_url/home/.config/alacritty/alacritty.toml"
@@ -223,7 +227,7 @@ sync_gui() {
 sync_bin() {
     mkdir -p "$HOME/bin"
 
-    set -- "ssh-tunnel" "modplay"
+    set -- "ssh-tunnel" "modplay" "xsig"
     for f in "$@"; do
         curl -sSLo "$HOME/bin/$f" "$dotfiles_url/home/bin/$f"
         chmod +x "$HOME/bin/$f"
