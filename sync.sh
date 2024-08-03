@@ -197,7 +197,8 @@ sync_gui() {
         apt_install "alacritty"
         apt_install "neovim"
 
-        papirus-folders -t Papirus-Dark -C violet
+        papirus-folders -t Papirus -C nordic -u
+        papirus-folders -t Papirus-Dark -C nordic -u
 
         mkdir -p "$HOME/.local/share/fonts"
         curl -sSLo "$HOME/.local/share/fonts/PerfectDOSVGA437Win.ttf" "$dotfiles_url/home/.local/share/fonts/PerfectDOSVGA437Win.ttf"
@@ -206,15 +207,6 @@ sync_gui() {
         rm -rf "$HOME/.config/alacritty"
         mkdir -p "$HOME/.config/alacritty"
         curl -sSLo "$HOME/.config/alacritty/alacritty.toml" "$dotfiles_url/home/.config/alacritty/alacritty.toml"
-
-        rm -f "$HOME/.gtkrc-2.0"
-        rm -rf "$HOME/.config/gtk-3.0"
-        curl -sSLo "$HOME/.gtkrc-2.0" "$dotfiles_url/home/.gtkrc-2.0"
-        curl -sSLo "$HOME/.config/gtk-3.0" "$dotfiles_url/home/.config/gtk-3.0/settings.ini"
-
-        # set the STB background color
-        gsettings set org.gnome.desktop.background picture-options 'none'
-        gsettings set org.gnome.desktop.background primary-color '#554770'
     fi
     if confirm "If you're using an apple keyboard driver, I can configure it to act right on linux"; then
         echo 2 | sudo tee /sys/module/hid_apple/parameters/fnmode
