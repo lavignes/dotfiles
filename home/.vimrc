@@ -112,7 +112,7 @@ nnoremap <M-F11> :exe "colo " .. PrevColors()<CR>
 
 set background=dark
 " On first-run the colorscheme doesn't exist yet :-)
-silent! colorscheme jellybeans
+silent! colorscheme OceanicNext
 " make bg a little darker
 " hi Normal guibg=#20242c
 
