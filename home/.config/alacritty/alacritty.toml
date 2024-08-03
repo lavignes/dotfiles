@@ -20,7 +20,7 @@ lines = 24
 blinking = "Always"
 
 [font]
-size = 16
+size = 32
 
 [font.normal]
 family = "Perfect DOS VGA 437 Win"
