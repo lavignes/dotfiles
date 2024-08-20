@@ -23,7 +23,14 @@ blinking = "Always"
 size = 32
 
 [font.normal]
-family = "Perfect DOS VGA 437 Win"
+# family = "ComicCode"
+family = "PerfectDOSVGA437Win"
+
+[font.bold]
+style = "Regular"
+
+[font.bold_italic]
+style = "Italic"
 
 [colors.bright]
 black = "0x414166"
