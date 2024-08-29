@@ -15,8 +15,8 @@ Plug 'fidian/hexmode'
 
 " languages
 Plug 'bfrg/vim-cpp-modern'
-Plug 'lavignes/snesgame', { 'rtp': 'tools/asm/vim' }
 Plug 'lavignes/gbgame', { 'rtp': 'tools/asm/vim' }
+Plug 'lavignes/snesgame', { 'rtp': 'tools/asm/vim' }
 Plug 'jgm/djot', { 'rtp': 'editors/vim' }
 Plug 'kylelaker/riscv.vim'
 Plug 'DingDean/wgsl.vim'
@@ -98,27 +98,21 @@ let g:colors = getcompletion('', 'color')
 func! NextColors()
     let idx = index(g:colors, g:colors_name)
     let color = (idx + 1 >= len(g:colors) ? g:colors[0] : g:colors[idx + 1])
-    call popup_notification(color, #{ line: 4, col: 4, highlight: 'WildMenu' })
+    echo "" .. color
     return color
 endfunc
 func! PrevColors()
     let idx = index(g:colors, g:colors_name)
     let color = (idx - 1 < 0 ? g:colors[-1] : g:colors[idx - 1])
-    call popup_notification(color, #{ line: 4, col: 4, highlight: 'WildMenu' })
+    echo "" .. color
     return color
 endfunc
-nnoremap <M-F12> :exe "colo " .. NextColors()<CR>
-nnoremap <M-F11> :exe "colo " .. PrevColors()<CR>
+nnoremap <F10> :exe "colo " .. NextColors()<CR>
+nnoremap <F9> :exe "colo " .. PrevColors()<CR>
 
 set background=dark
 " On first-run the colorscheme doesn't exist yet :-)
-silent! colorscheme OceanicNext
-" make bg a little darker
-" hi Normal guibg=#20242c
-
-" Make popup menu colors not hard to read
-" hi Pmenu ctermbg=black ctermfg=white
-" hi Pmenu guibg=black guifg=white
+silent! colorscheme carbonized-dark
 
 " force style on some items
 hi Comment cterm=italic
@@ -128,7 +122,7 @@ hi PreProc cterm=bold,italic
 autocmd VimEnter * :VMTheme nord
 
 let g:lightline = {
-	\ 'colorscheme': 'jellybeans',
+	\ 'colorscheme': 'carbonized_dark',
 	\ 'active': {
 	\   'left': [ [ 'mode', 'paste' ],
 	\             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
