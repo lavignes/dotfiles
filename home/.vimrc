@@ -12,6 +12,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'mg979/vim-visual-multi', { 'branch': 'master' }
 Plug 'fidian/hexmode'
+Plug 'luochen1990/rainbow'
 
 " languages
 Plug 'bfrg/vim-cpp-modern'
@@ -44,6 +45,9 @@ let g:table_mode_corner='|'
 
 " vim-cpp-modern settings
 let g:cpp_member_highlight = 1
+
+" enable rainbow only with :RainbowToggle
+let g:rainbow_active = 0
 
 " ctrl+p to fzf's :History
 nmap <C-P> :History<CR>
@@ -112,7 +116,7 @@ nnoremap <F9> :exe "colo " .. PrevColors()<CR>
 
 set background=dark
 " On first-run the colorscheme doesn't exist yet :-)
-silent! colorscheme carbonized-dark
+silent! colorscheme challenger_deep
 
 " force style on some items
 hi Comment cterm=italic
@@ -122,7 +126,7 @@ hi PreProc cterm=bold,italic
 autocmd VimEnter * :VMTheme nord
 
 let g:lightline = {
-	\ 'colorscheme': 'carbonized_dark',
+	\ 'colorscheme': 'challenger_deep',
 	\ 'active': {
 	\   'left': [ [ 'mode', 'paste' ],
 	\             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
