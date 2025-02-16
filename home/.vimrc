@@ -16,7 +16,7 @@ Plug 'luochen1990/rainbow'
 
 " languages
 Plug 'bfrg/vim-cpp-modern'
-Plug 'lavignes/gbgame', { 'rtp': 'tools/asm/vim' }
+Plug 'lavignes/gbgame2', { 'rtp': 'tools/asm/vim' }
 Plug 'lavignes/snesgame', { 'rtp': 'tools/asm/vim' }
 Plug 'jgm/djot', { 'rtp': 'editors/vim' }
 Plug 'kylelaker/riscv.vim'
@@ -27,7 +27,6 @@ Plug 'rafi/awesome-vim-colorschemes'
 Plug 'lmintmate/blue-mood-vim'
 Plug 'sainnhe/everforest'
 Plug 'mcchrish/zenbones.nvim'
-Plug 'hardselius/warlock'
 call plug#end()
 
 " ensure vim and nvim use the same coc-config
@@ -44,10 +43,13 @@ autocmd FileType c let termdebugger="gdb"
 let g:table_mode_corner='|'
 
 " vim-cpp-modern settings
-let g:cpp_member_highlight = 1
+let g:cpp_member_highlight=1
+
+" use bytes in Hexmode
+let g:hexmode_xxd_options='-g 1'
 
 " enable rainbow only with :RainbowToggle
-let g:rainbow_active = 0
+let g:rainbow_active=0
 
 " ctrl+p to fzf's :History
 nmap <C-P> :History<CR>
@@ -67,7 +69,6 @@ command! -nargs=0 Fmt :call CocAction('format')
 command! -nargs=0 Doc :call <SID>show_documentation()
 command! -nargs=0 Def :call CocAction('jumpDefinition')
 command! -nargs=0 Used :call CocAction('jumpUsed')
-
 command! -nargs=0 Action :call CocActionAsync('codeLensAction')
 
 function! s:show_documentation()
@@ -91,7 +92,7 @@ inoremap <S-Tab> <C-d>
 nnoremap <Tab> >>
 inoremap <Tab> <C-I>
 
-" xclip
+" Clipboard
 vnoremap <C-c> :w !xclip -sel clipboard<CR><CR>
 
 " Highlight the symbol and its references when holding the cursor.
@@ -184,3 +185,4 @@ set expandtab
 set shiftwidth=4
 set tabstop=4
 set cursorline
+set guicursor=n-v-c-i:block
