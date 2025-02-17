@@ -117,7 +117,7 @@ nnoremap <F9> :exe "colo " .. PrevColors()<CR>
 
 set background=dark
 " On first-run the colorscheme doesn't exist yet :-)
-silent! colorscheme challenger_deep
+silent! colorscheme onehalfdark
 
 " force style on some items
 hi Comment cterm=italic
@@ -127,7 +127,7 @@ hi PreProc cterm=bold,italic
 autocmd VimEnter * :VMTheme nord
 
 let g:lightline = {
-	\ 'colorscheme': 'challenger_deep',
+	\ 'colorscheme': 'onehalfdark',
 	\ 'active': {
 	\   'left': [ [ 'mode', 'paste' ],
 	\             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
