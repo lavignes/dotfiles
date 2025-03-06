@@ -34,10 +34,14 @@ let g:coc_config_home = '~/.vim/'
 
 autocmd BufRead,BufNewFile *.h,*.c set filetype=c
 
+" enable :Termdebug
 packadd! termdebug
 let g:termdebug_wide=1
 autocmd FileType rust let termdebugger="rust-gdb"
 autocmd FileType c let termdebugger="gdb"
+
+" enable :Man command
+runtime! ftplugin/man.vim
 
 " make tables markdown-compatible
 let g:table_mode_corner='|'
