@@ -105,13 +105,13 @@ sync_shell() {
 
 sync_node() {
     if confirm "I will now install nvm and update to the latest nodejs."; then
-        eval "$(curl -sSL "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh")"
+        eval "$(curl -sSL "https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh")"
         NVM_DIR="$HOME/.nvm"
         # shellcheck source=/dev/null
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-        nvm install 16
-        nvm use 16
-        nvm alias default 16
+        nvm install 20
+        nvm use 20
+        nvm alias default 20
     fi
 }
 
