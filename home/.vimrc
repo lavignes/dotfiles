@@ -13,6 +13,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'mg979/vim-visual-multi', { 'branch': 'master' }
 Plug 'fidian/hexmode'
 Plug 'luochen1990/rainbow'
+Plug 'github/copilot.vim'
 
 " languages
 Plug 'bfrg/vim-cpp-modern'
@@ -67,6 +68,11 @@ let NERDTreeMinimalUI=1
 let g:NERDTreeDirArrowExpandable = '+'
 let g:NERDTreeDirArrowCollapsible = '-'
 let NERDTreeIgnore=['\.o$', '\.d$'] " ignore certain files
+
+" Copilot settings
+imap <silent><script><expr> <C-\> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
+let b:copilot_enabled = v:false
 
 command! -nargs=0 Rename :call CocActionAsync('rename')
 command! -nargs=0 Fmt :call CocAction('format')
