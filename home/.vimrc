@@ -17,7 +17,7 @@ Plug 'github/copilot.vim'
 
 " languages
 Plug 'bfrg/vim-cpp-modern'
-Plug 'lavignes/gbgame2', { 'rtp': 'tools/asm/vim' }
+Plug 'lavignes/smasm', { 'rtp': 'vim' }
 Plug 'lavignes/snesgame', { 'rtp': 'tools/asm/vim' }
 Plug 'jgm/djot', { 'rtp': 'editors/vim' }
 Plug 'kylelaker/riscv.vim'
