@@ -226,10 +226,17 @@ sync_bin() {
     done
 }
 
+sync_gdb() {
+    rm -f "$HOME/.gdbinit"
+
+    curl -sSLo "$HOME/.gdbinit" "$dotfiles_url/home/.gdbinit"
+}
+
 require_command "curl"
 sync_git
 sync_shell
 sync_rust
 sync_vim
 sync_bin
+sync_gdb
 sync_gui
