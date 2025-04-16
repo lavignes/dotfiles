@@ -105,7 +105,7 @@ sync_shell() {
 
 sync_node() {
     if confirm "I will now install nvm and update to the latest nodejs."; then
-        eval "$(curl -sSL "https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh")"
+        curl -sSL "https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh" | bash
         NVM_DIR="$HOME/.nvm"
         # shellcheck source=/dev/null
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
@@ -169,7 +169,7 @@ sync_vim() {
             curl -sSLo "$HOME/.vim/$f" "$dotfiles_url/home/.vim/$f"
         done
 
-        cargo install --git https://github.com/wgsl-analyzer/wgsl-analyzer wgsl_analyzer
+        cargo install --git https://github.com/wgsl-analyzer/wgsl-analyzer wgsl-analyzer
 
         echo "This will look weird. But in 5 seconds I will start vim and set it up."
         echo "Don't worry, it will close right afterward..."
