@@ -12,8 +12,9 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'mg979/vim-visual-multi', { 'branch': 'master' }
 Plug 'fidian/hexmode'
-Plug 'luochen1990/rainbow'
+
 Plug 'github/copilot.vim'
+Plug 'DanBradbury/copilot-chat.vim'
 
 " languages
 Plug 'bfrg/vim-cpp-modern'
@@ -127,7 +128,7 @@ nnoremap <F9> :exe "colo " .. PrevColors()<CR>
 
 set background=dark
 " On first-run the colorscheme doesn't exist yet :-)
-silent! colorscheme onehalfdark
+silent! colorscheme dogrun
 
 " force style on some items
 hi Comment cterm=italic
