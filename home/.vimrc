@@ -29,7 +29,10 @@ Plug 'rafi/awesome-vim-colorschemes'
 Plug 'lmintmate/blue-mood-vim'
 Plug 'sainnhe/everforest'
 Plug 'mcchrish/zenbones.nvim'
+Plug 'mswift42/vim-themes'
 call plug#end()
+
+filetype plugin indent on
 
 " ensure vim and nvim use the same coc-config
 let g:coc_config_home = '~/.vim/'
@@ -54,12 +57,6 @@ let g:cpp_member_highlight=1
 " use bytes in Hexmode
 let g:hexmode_xxd_options='-g 1'
 
-" enable rainbow only with :RainbowToggle
-let g:rainbow_active=0
-
-" ctrl+p to fzf's :History
-nmap <C-P> :History<CR>
-
 " F1 toggles NERDTree
 nnoremap <F1> :NERDTreeMirror<CR>:NERDTreeToggle<CR>
 " Close vim if NERDTree is the only thing open
@@ -71,7 +68,9 @@ let g:NERDTreeDirArrowCollapsible = '-'
 let NERDTreeIgnore=['\.o$', '\.d$'] " ignore certain files
 
 " Copilot settings
-imap <silent><script><expr> <C-\> copilot#Accept("\<CR>")
+inoremap <silent><script><expr> <F9> copilot#Next()
+inoremap <silent><script><expr> <F11> copilot#AcceptWord("\<CR>")
+inoremap <silent><script><expr> <F12> copilot#Accept("\<CR>")
 let g:copilot_no_tab_map = v:true
 let b:copilot_enabled = v:false
 
@@ -109,25 +108,8 @@ vnoremap <C-c> :w !xclip -sel clipboard<CR><CR>
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" color switching
-let g:colors = getcompletion('', 'color')
-func! NextColors()
-    let idx = index(g:colors, g:colors_name)
-    let color = (idx + 1 >= len(g:colors) ? g:colors[0] : g:colors[idx + 1])
-    echo "" .. color
-    return color
-endfunc
-func! PrevColors()
-    let idx = index(g:colors, g:colors_name)
-    let color = (idx - 1 < 0 ? g:colors[-1] : g:colors[idx - 1])
-    echo "" .. color
-    return color
-endfunc
-nnoremap <F10> :exe "colo " .. NextColors()<CR>
-nnoremap <F9> :exe "colo " .. PrevColors()<CR>
-
-set background=dark
 " On first-run the colorscheme doesn't exist yet :-)
+set background=dark
 silent! colorscheme dogrun
 
 " force style on some items
@@ -138,7 +120,7 @@ hi PreProc cterm=bold,italic
 autocmd VimEnter * :VMTheme nord
 
 let g:lightline = {
-	\ 'colorscheme': 'onehalfdark',
+	\ 'colorscheme': 'jellybeans',
 	\ 'active': {
 	\   'left': [ [ 'mode', 'paste' ],
 	\             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
