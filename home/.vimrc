@@ -71,8 +71,8 @@ let NERDTreeIgnore=['\.o$', '\.d$'] " ignore certain files
 inoremap <silent><script><expr> <F9> copilot#Next()
 inoremap <silent><script><expr> <F11> copilot#AcceptWord("\<CR>")
 inoremap <silent><script><expr> <F12> copilot#Accept("\<CR>")
-let g:copilot_no_tab_map = v:true
-let b:copilot_enabled = v:false
+let g:copilot_no_tab_map = 1
+let b:copilot_enabled = 0
 
 command! -nargs=0 Rename :call CocActionAsync('rename')
 command! -nargs=0 Fmt :call CocAction('format')
