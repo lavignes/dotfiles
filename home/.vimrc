@@ -163,6 +163,7 @@ set termguicolors
 set noswapfile
 set updatetime=300
 set nowrap
+set linebreak
 set laststatus=2
 set cmdheight=2
 set noshowmode
