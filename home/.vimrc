@@ -32,8 +32,6 @@ Plug 'mcchrish/zenbones.nvim'
 Plug 'mswift42/vim-themes'
 call plug#end()
 
-filetype plugin indent on
-
 " ensure vim and nvim use the same coc-config
 let g:coc_config_home = '~/.vim/'
 
@@ -72,7 +70,12 @@ inoremap <silent><script><expr> <F9> copilot#Next()
 inoremap <silent><script><expr> <F11> copilot#AcceptWord("\<CR>")
 inoremap <silent><script><expr> <F12> copilot#Accept("\<CR>")
 let g:copilot_no_tab_map = 1
-let b:copilot_enabled = 0
+
+if (hostname() != "desky")
+  let g:copilot_filetypes = {
+      \ '*': v:false,
+      \ }
+endif
 
 command! -nargs=0 Rename :call CocActionAsync('rename')
 command! -nargs=0 Fmt :call CocAction('format')
