@@ -2,7 +2,7 @@ set nocompatible
 set encoding=utf-8
 
 call plug#begin('~/.vim/plugged')
-Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+Plug 'neoclide/coc.nvim', { 'branch': 'release', 'commit': '964ee1fbe234edb600dad22c93c9721cc30e2151' }
 Plug 'itchyny/lightline.vim'
 Plug 'preservim/nerdtree'
 
