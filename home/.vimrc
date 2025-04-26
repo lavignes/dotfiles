@@ -2,7 +2,7 @@ set nocompatible
 set encoding=utf-8
 
 call plug#begin('~/.vim/plugged')
-Plug 'neoclide/coc.nvim', { 'branch': 'release', 'commit': '964ee1fbe234edb600dad22c93c9721cc30e2151' }
+Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'itchyny/lightline.vim'
 Plug 'preservim/nerdtree'
 
@@ -12,6 +12,9 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'mg979/vim-visual-multi', { 'branch': 'master' }
 Plug 'fidian/hexmode'
+
+Plug 'kamykn/spelunker.vim'
+Plug 'kamykn/popup-menu.nvim'
 
 Plug 'github/copilot.vim'
 Plug 'DanBradbury/copilot-chat.vim'
@@ -32,10 +35,34 @@ Plug 'mcchrish/zenbones.nvim'
 Plug 'mswift42/vim-themes'
 call plug#end()
 
+" Coc Settings
 " ensure vim and nvim use the same coc-config
 let g:coc_config_home = '~/.vim/'
 
-autocmd BufRead,BufNewFile *.h,*.c set filetype=c
+command! -nargs=0 Rename :call CocActionAsync('rename')
+command! -nargs=0 Fmt :call CocAction('format')
+command! -nargs=0 Doc :call <SID>show_documentation()
+command! -nargs=0 Def :call CocAction('jumpDefinition')
+command! -nargs=0 Used :call CocAction('jumpUsed')
+command! -nargs=0 Action :call CocActionAsync('codeLensAction')
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " enable :Termdebug
 packadd! termdebug
@@ -51,6 +78,7 @@ let g:table_mode_corner='|'
 
 " vim-cpp-modern settings
 let g:cpp_member_highlight=1
+autocmd BufRead,BufNewFile *.h,*.c set filetype=c
 
 " use bytes in Hexmode
 let g:hexmode_xxd_options='-g 1'
@@ -77,27 +105,10 @@ if (hostname() != "desky")
       \ }
 endif
 
-command! -nargs=0 Rename :call CocActionAsync('rename')
-command! -nargs=0 Fmt :call CocAction('format')
-command! -nargs=0 Doc :call <SID>show_documentation()
-command! -nargs=0 Def :call CocAction('jumpDefinition')
-command! -nargs=0 Used :call CocAction('jumpUsed')
-command! -nargs=0 Action :call CocActionAsync('codeLensAction')
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
-endfunction
-
-" Make <CR> auto-select the first completion item and notify coc.nvim to
-" format on enter, <cr> could be remapped by other vim plugin
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+" spelunker settings
+let g:enable_spelunker_vim = 0
+command! -nargs=0 SpellToggle :call spelunker#toggle()
+command! -nargs=0 Spell :call spelunker#correct_from_list()
 
 " Sane tabs
 nnoremap <S-Tab> <<
@@ -107,9 +118,6 @@ inoremap <Tab> <C-I>
 
 " Clipboard
 vnoremap <C-c> :w !xclip -sel clipboard<CR><CR>
-
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " On first-run the colorscheme doesn't exist yet :-)
 set background=dark
