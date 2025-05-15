@@ -121,7 +121,7 @@ vnoremap <C-c> :w !xclip -sel clipboard<CR><CR>
 
 " On first-run the colorscheme doesn't exist yet :-)
 set background=dark
-silent! colorscheme dogrun
+silent! colorscheme ayu
 
 " force style on some items
 hi Comment cterm=italic
