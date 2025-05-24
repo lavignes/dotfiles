@@ -4,6 +4,7 @@ set -e
 
 dotfiles_url="https://raw.githubusercontent.com/lavignes/dotfiles/mainline"
 workdir="$(mktemp -d)"
+curdir="$(pwd)"
 echo "The temp working directory will be $workdir"
 
 require_command() {
@@ -136,10 +137,36 @@ ag_install() {
     yum_install "pcre-devel"
     yum_install "xz-devel"
     git clone "https://github.com/ggreer/the_silver_searcher.git" "$workdir/the_silver_searcher"
-    pushd "$workdir/the_silver_searcher"
+    cd "$workdir/the_silver_searcher"
     ./build.sh
     sudo make install
-    popd
+    cd "$curdir"
+}
+
+alacritty_install() {
+    if [ -x "$(command -v "alacritty")" ]; then
+        return
+    fi
+    apt_install "cmake"
+    apt_install "g++"
+    apt_install "pkg-config"
+    apt_install "libfontconfig1-dev"
+    apt_install "libxcb-xfixes0-dev"
+    apt_install "libxkbcommon-dev"
+    apt_install "python3"
+    apt_install "libegl1-mesa-dev"
+    git clone "https://github.com/alacritty/alacritty.git" "$workdir/alacritty"
+    echo "going into $workdir/alacritty"
+    cd "$workdir/alacritty"
+    cargo build --release
+    if ! infocmp alacritty; then
+        sudo tic -xe alacritty,alacritty-direct extra/alacritty.info
+    fi
+    sudo cp target/release/alacritty /usr/local/bin
+    sudo cp extra/logo/alacritty-term.svg /usr/share/pixmaps/Alacritty.svg
+    sudo desktop-file-install extra/linux/Alacritty.desktop
+    sudo update-desktop-database
+    cd "$curdir"
 }
 
 sync_vim() {
@@ -189,12 +216,10 @@ sync_gui() {
 
     if confirm "All the basic stuff is done. I can now setup the gui."; then
         sudo add-apt-repository -y ppa:papirus/papirus
-        sudo add-apt-repository -y ppa:aslatter/ppa
         sudo apt-add-repository -y ppa:neovim-ppa/unstable
         sudo apt update
 
         apt_install "papirus-icon-theme"
-        apt_install "alacritty"
         apt_install "neovim"
 
         papirus-folders -t Papirus -C nordic -u
@@ -204,6 +229,7 @@ sync_gui() {
         curl -sSLo "$HOME/.local/share/fonts/PerfectDOSVGA437Win.ttf" "$dotfiles_url/home/.local/share/fonts/PerfectDOSVGA437Win.ttf"
         fc-cache -f
 
+        alacritty_install
         rm -rf "$HOME/.config/alacritty"
         mkdir -p "$HOME/.config/alacritty"
         curl -sSLo "$HOME/.config/alacritty/alacritty.toml" "$dotfiles_url/home/.config/alacritty/alacritty.toml"
