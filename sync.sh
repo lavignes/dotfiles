@@ -107,7 +107,7 @@ sync_shell() {
 sync_node() {
     if confirm "I will now install nvm and update to the latest nodejs."; then
         curl -sSL "https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh" | bash
-        NVM_DIR="$HOME/.nvm"
+        NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
         # shellcheck source=/dev/null
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
         nvm install 20
