@@ -3,6 +3,10 @@
     "inlayHint.enable": false,
     "coc.preferences.formatOnSaveFiletypes": ["rust", "c"],
 
+    "diagnostic.infoSign": ">>",
+    "diagnostic.warningSign": "??",
+    "diagnostic.errorSign": "!!",
+
     "clangd.arguments": ["--header-insertion=never", "--inlay-hints=false", "--clang-tidy"],
     "clangd.inlayHints.enable": false,
 
@@ -20,6 +24,5 @@
             "command": "wgsl_analyzer",
             "filetypes": ["wgsl"]
          }
-    },
-    "clangd.path": "~/.config/coc/extensions/coc-clangd-data/install/17.0.3/clangd_17.0.3/bin/clangd"
+    }
 }
