@@ -91,7 +91,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree")
 let NERDTreeMinimalUI=1
 let g:NERDTreeDirArrowExpandable = '+'
 let g:NERDTreeDirArrowCollapsible = '-'
-let NERDTreeIgnore=['\.o$', '\.d$'] " ignore certain files
+let NERDTreeIgnore=['\.o$', '\.d$', '\.tst$'] " ignore certain files
 
 " Copilot settings
 inoremap <silent><script><expr> <F9> copilot#Next()
@@ -121,7 +121,7 @@ vnoremap <C-c> :w !xclip -sel clipboard<CR><CR>
 
 " On first-run the colorscheme doesn't exist yet :-)
 set background=dark
-silent! colorscheme zaibatsu
+silent! colorscheme madrid
 
 " force style on some items
 hi Comment cterm=italic
