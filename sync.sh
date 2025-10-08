@@ -226,7 +226,9 @@ sync_gui() {
         papirus-folders -t Papirus-Dark -C nordic -u
 
         mkdir -p "$HOME/.local/share/fonts"
-        curl -sSLo "$HOME/.local/share/fonts/PerfectDOSVGA437Win.ttf" "$dotfiles_url/home/.local/share/fonts/PerfectDOSVGA437Win.ttf"
+        curl -sSLo "$workdir/PerfectDOSVGA437Win.tar.xz" "$dotfiles_url/home/.local/share/fonts/PerfectDOSVGA437Win.tar.xz"
+        tar xzf "$workdir/PerfectDOSVGA437Win.tar.xz" -C "$HOME/.local/share/fonts"
+
         fc-cache -f
 
         alacritty_install
