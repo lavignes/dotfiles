@@ -110,9 +110,9 @@ sync_node() {
         NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
         # shellcheck source=/dev/null
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-        nvm install 20
-        nvm use 20
-        nvm alias default 20
+        nvm install 24
+        nvm use 24
+        nvm alias default 24
     fi
 }
 
