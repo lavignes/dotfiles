@@ -229,6 +229,10 @@ sync_gui() {
         curl -sSLo "$workdir/PerfectDOSVGA437Win.tar.xz" "$dotfiles_url/home/.local/share/fonts/PerfectDOSVGA437Win.tar.xz"
         tar xzf "$workdir/PerfectDOSVGA437Win.tar.xz" -C "$HOME/.local/share/fonts"
 
+        mkdir -p "$HOME/.local/share/fonts"
+        curl -sSLo "$workdir/ACPlus_IBM_BIOS.tar.gz" "$dotfiles_url/home/.local/share/fonts/ACPlus_IBM_BIOS.tar.xz"
+        tar xzf "$workdir/ACPlus_IBM_BIOS.tar.gz" -C "$HOME/.local/share/fonts"
+
         fc-cache -f
 
         alacritty_install
