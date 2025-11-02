@@ -227,11 +227,11 @@ sync_gui() {
 
         mkdir -p "$HOME/.local/share/fonts"
         curl -sSLo "$workdir/PerfectDOSVGA437Win.tar.xz" "$dotfiles_url/home/.local/share/fonts/PerfectDOSVGA437Win.tar.xz"
-        tar xzf "$workdir/PerfectDOSVGA437Win.tar.xz" -C "$HOME/.local/share/fonts"
+        tar xf "$workdir/PerfectDOSVGA437Win.tar.xz" -C "$HOME/.local/share/fonts"
 
         mkdir -p "$HOME/.local/share/fonts"
         curl -sSLo "$workdir/AcPlus_IBM_BIOS.tar.xz" "$dotfiles_url/home/.local/share/fonts/AcPlus_IBM_BIOS.tar.xz"
-        tar xzf "$workdir/AcPlus_IBM_BIOS.tar.xz" -C "$HOME/.local/share/fonts"
+        tar xf "$workdir/AcPlus_IBM_BIOS.tar.xz" -C "$HOME/.local/share/fonts"
 
         fc-cache -f
 
