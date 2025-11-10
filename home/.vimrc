@@ -144,22 +144,6 @@ let g:lightline = {
 " Use autocmd to force lightline update.
 autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 
-function! ExitNormalMode()
-    unmap <buffer> <silent> <RightMouse>
-    call feedkeys("a")
-endfunction
-
-function! EnterNormalMode()
-    if &buftype == 'terminal' && mode('') == 't'
-        call feedkeys("\<c-w>N")
-        call feedkeys("\<c-y>")
-        map <buffer> <silent> <RightMouse> :call ExitNormalMode()<CR>
-    endif
-endfunction
-
-" Automatically enter normal mode in terminal with scroll wheel
-tmap <silent> <ScrollWheelUp> <c-w>:call EnterNormalMode()<CR>
-
 " Scroll to last edit position when switching buffers
 autocmd BufReadPost *
      \ if line("'\"") > 0 && line("'\"") <= line("$") |
@@ -169,6 +153,7 @@ autocmd BufReadPost *
 " don't use colors from terminal
 set termguicolors
 set noswapfile
+set nohidden
 set updatetime=300
 set nowrap
 set linebreak
