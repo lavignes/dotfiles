@@ -17,15 +17,10 @@ Plug 'kamykn/spelunker.vim'
 Plug 'kamykn/popup-menu.nvim'
 
 Plug 'github/copilot.vim'
-Plug 'DanBradbury/copilot-chat.vim'
 
 " languages
 Plug 'bfrg/vim-cpp-modern'
 Plug 'lavignes/smasm', { 'rtp': 'vim' }
-Plug 'lavignes/snesgame', { 'rtp': 'tools/asm/vim' }
-Plug 'jgm/djot', { 'rtp': 'editors/vim' }
-Plug 'kylelaker/riscv.vim'
-Plug 'DingDean/wgsl.vim'
 
 " colorschemes
 Plug 'rafi/awesome-vim-colorschemes'
@@ -98,12 +93,6 @@ inoremap <silent><script><expr> <F9> copilot#Next()
 inoremap <silent><script><expr> <F11> copilot#AcceptWord("\<CR>")
 inoremap <silent><script><expr> <F12> copilot#Accept("\<CR>")
 let g:copilot_no_tab_map = 1
-
-if (hostname() != "desky")
-  let g:copilot_filetypes = {
-      \ '*': v:false,
-      \ }
-endif
 
 " spelunker settings
 let g:enable_spelunker_vim = 0
