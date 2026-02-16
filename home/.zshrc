@@ -3,16 +3,17 @@ export PATH="/usr/local/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
 
-export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="sunaku"
-plugins=(git history-substring-search)
+if [[ "$TERM_PROGRAM" == "kiro" ]]; then
 
-source $ZSH/oh-my-zsh.sh
+else
+    export ZSH="$HOME/.oh-my-zsh"
+    ZSH_THEME="sunaku"
+    plugins=(git history-substring-search)
+    source $ZSH/oh-my-zsh.sh
 
-# User configuration
-
-bindkey "$terminfo[kcuu1]" history-substring-search-up
-bindkey "$terminfo[kcud1]" history-substring-search-down
+    bindkey "$terminfo[kcuu1]" history-substring-search-up
+    bindkey "$terminfo[kcud1]" history-substring-search-down
+fi
 
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
