@@ -196,8 +196,6 @@ sync_vim() {
             curl -sSLo "$HOME/.vim/$f" "$dotfiles_url/home/.vim/$f"
         done
 
-        cargo install --git https://github.com/wgsl-analyzer/wgsl-analyzer wgsl-analyzer
-
         echo "This will look weird. But in 5 seconds I will start vim and set it up."
         echo "Don't worry, it will close right afterward..."
         sleep 5
