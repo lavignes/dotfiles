@@ -214,7 +214,7 @@ sync_gui() {
 }
 
 sync_bin() {
-    set -- "" "modplay" "xsig"
+    set -- "ssh-tunnel" "modplay" "xsig"
     for f in "$@"; do
         curl -sSLo "$HOME/bin/$f" --create-dirs "$dotfiles_url/home/bin/$f"
         chmod +x "$HOME/bin/$f"
