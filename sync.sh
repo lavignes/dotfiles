@@ -216,8 +216,8 @@ sync_gui() {
 sync_bin() {
     set -- "" "modplay" "xsig"
     for f in
-        curlOME/bin/$f" --create-dirs \
-            _url/home/bin/$f"
+        curl -sSLo "$HOME/bin/$f" --create-dirs \
+            "$dotfiles_url/home/bin/$f"
         chmod +x "$HOME/bin/$f"
     done
 }
