@@ -150,9 +150,10 @@ alacritty_install() {
 }
 
 sync_vim() {
-    sudo apt-add-repository -y ppa:neovim-ppa/unstable
-    apt_install "neovim"
-    if [ "$os_pkg_manager" != "apt" ]; then
+    if [ "$os_pkg_manager" = "apt" ]; then
+        sudo apt-add-repository -y ppa:neovim-ppa/unstable
+        apt_install "neovim"
+    else
         rm -f "$HOME/bin/nvim"
         curl -sSLo "$HOME/bin/nvim" --create-dirs \
             "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage"
