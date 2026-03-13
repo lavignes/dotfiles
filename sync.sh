@@ -7,6 +7,10 @@ workdir="$(mktemp -d)"
 curdir="$(pwd)"
 echo "The temp working directory will be $workdir"
 
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export LD_LIBRARY_PATH="$HOME/.local/lib64:$LD_LIBRARY_PATH"
+
 require_command() {
     if ! [ -x "$(command -v "$1")" ]; then
         echo "Couldn't find $1 on your system. I cannot continue..."
@@ -104,22 +108,72 @@ sync_shell() {
     fi
 }
 
+sync_gcc() {
+    if [ "$os_pkg_manager" = "apt" ]; then
+        return
+    fi
+    if [ -x "$HOME/.local/bin/gcc" ]; then
+        return
+    fi
+
+    yum_install "texinfo"
+
+    git clone --depth 1 --branch binutils-2_44 \
+        "https://sourceware.org/git/binutils-gdb.git" "$workdir/binutils"
+    cd "$workdir/binutils"
+    mkdir build && cd build
+    CC=gcc10-gcc CXX=gcc10-g++ ../configure --prefix="$HOME/.local" \
+        --disable-gprofng --disable-gdb --disable-gdbserver
+    make -j
+    make install
+    cd "$curdir"
+
+    git clone --depth 1 --branch releases/gcc-15 \
+        "https://gcc.gnu.org/git/gcc.git" "$workdir/gcc"
+    cd "$workdir/gcc"
+    ./contrib/download_prerequisites
+    mkdir build && cd build
+    CC=gcc10-gcc CXX=gcc10-g++ ../configure --prefix="$HOME/.local" \
+        --enable-languages=c,c++ --disable-multilib --disable-bootstrap
+    make -j
+    make install
+    cd "$curdir"
+}
+
 sync_node() {
     if confirm "I will now install nvm and update to the latest nodejs."; then
         curl -sSL "https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh" | bash
         NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
         # shellcheck source=/dev/null
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-        nvm install 24
-        nvm use 24
-        nvm alias default 24
+
+        if [ "$os_pkg_manager" = "apt" ]; then
+            nvm install 24
+            nvm use 24
+            nvm alias default 24
+            return
+        fi
+
+        nvm install 16
+        nvm use 16
+        nvm alias default 16
+        #
+        #if ! [ -x "$(command -v "node")" ]; then
+        #    git clone --depth 1 --branch "v24.14.0" \
+        #        "https://github.com/nodejs/node.git" "$workdir/node"
+        #    cd "$workdir/node"
+        #    CC="$HOME/.local/bin/gcc" CXX="$HOME/.local/bin/g++" \
+        #        ./configure --prefix="$HOME/.nvm/versions/node/v24.10.0"
+        #    make -j
+        #    make install
+        #    cd "$curdir"
+        #fi
     fi
 }
 
 sync_rust() {
     if confirm "I will now install rustup and cargo."; then
         curl -sSL "https://sh.rustup.rs" | sh -s -- --no-modify-path -y
-        export PATH="$HOME/.cargo/bin:$PATH"
     fi
 }
 
@@ -135,8 +189,7 @@ alacritty_install() {
     apt_install "libxkbcommon-dev"
     apt_install "python3"
     apt_install "libegl1-mesa-dev"
-    git clone "https://github.com/alacritty/alacritty.git" "$workdir/alacritty"
-    echo "going into $workdir/alacritty"
+    git clone --depth 1 "https://github.com/alacritty/alacritty.git" "$workdir/alacritty"
     cd "$workdir/alacritty"
     cargo build --release
     if ! infocmp alacritty; then
@@ -149,16 +202,48 @@ alacritty_install() {
     cd "$curdir"
 }
 
+sync_cmake() {
+    if [ "$os_pkg_manager" = "apt" ]; then
+        apt_install "libssl-dev"
+        apt_install "cmake"
+        return
+    fi
+    if [ -x "$(command -v "$HOME/.local/bin/cmake")" ]; then
+        return
+    fi
+
+    yum_install "perl-core"
+
+    if ! [ -x "$(command -v "$HOME/.local/bin/openssl")" ]; then
+        git clone --depth 1 "https://github.com/openssl/openssl.git" "$workdir/openssl"
+        cd "$workdir/openssl"
+        ./Configure --prefix="$HOME/.local"
+        make -j CC=gcc10-gcc
+        make install
+        cd "$curdir"
+    fi
+
+    git clone --depth 1 "https://github.com/Kitware/CMake.git" "$workdir/cmake"
+    cd "$workdir/cmake"
+    ./bootstrap --prefix="$HOME/.local" -- -DOPENSSL_ROOT_DIR="$HOME/.local"
+    make -j
+    make install
+    cd "$curdir"
+}
+
 sync_vim() {
     if [ "$os_pkg_manager" = "apt" ]; then
         sudo apt-add-repository -y ppa:neovim-ppa/unstable
         apt_install "neovim"
-    else
-        curl -sSLo "$workdir/nvim-linux-x86_64.tar.gz" \
-            "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz"
-        mkdir -p "$HOME/.local"
-        tar xzf "$workdir/nvim-linux-x86_64.tar.gz" --strip-components=1 \
-            -C "$HOME/.local"
+    fi
+
+    if ! [ -x "$(command -v "nvim")" ]; then
+        git clone --depth 1 "https://github.com/neovim/neovim.git" "$workdir/neovim"
+        cd "$workdir/neovim"
+        make -j CC="$HOME/.local/bin/gcc" CXX="$HOME/.local/bin/g++" \
+            CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local"
+        make install
+        cd "$curdir"
     fi
 
     require_command "nvim"
@@ -170,8 +255,8 @@ sync_vim() {
 
     if confirm "I will now replace your vim configuration."; then
         rm -rf "$HOME/.config/nvim"
-        curl -sSLo "$HOME/.config/nvim/init.vim" --create-dirs \
-            "$dotfiles_url/home/.config/nvim/init.vim"
+        curl -sSLo "$HOME/.config/nvim/init.lua" --create-dirs \
+            "$dotfiles_url/home/.config/nvim/init.lua"
     fi
 }
 
@@ -233,8 +318,10 @@ require_command "curl"
 sync_git
 sync_shell
 sync_rust
-sync_node
 sync_bin
+sync_gcc
+sync_cmake
+sync_node
 sync_vim
 sync_gdb
 sync_gui
