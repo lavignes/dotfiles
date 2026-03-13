@@ -123,26 +123,6 @@ sync_rust() {
     fi
 }
 
-ag_install() {
-    if [ -x "$(command -v "ag")" ]; then
-        return
-    fi
-    if [ "$os_pkg_manager" != "yum" ]; then
-        return
-    fi
-    yum_install "pkgconfig"
-    yum_install "automake"
-    yum_install "gcc"
-    yum_install "zlib-devel"
-    yum_install "pcre-devel"
-    yum_install "xz-devel"
-    git clone "https://github.com/ggreer/the_silver_searcher.git" "$workdir/the_silver_searcher"
-    cd "$workdir/the_silver_searcher"
-    ./build.sh
-    sudo make install
-    cd "$curdir"
-}
-
 alacritty_install() {
     if [ -x "$(command -v "alacritty")" ]; then
         return
@@ -170,38 +150,26 @@ alacritty_install() {
 }
 
 sync_vim() {
-    apt_install "vim"
-    yum_install "vim"
-    require_command "vim"
-    sync_node
+    sudo apt-add-repository -y ppa:neovim-ppa/unstable
+    apt_install "neovim"
+    if [ "$os_pkg_manager" != "apt" ]; then
+        rm -f "$HOME/bin/nvim"
+        curl -sSLo "$HOME/bin/nvim" --create-dirs \
+            "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage"
+        chmod +x "$HOME/bin/nvim"
+    fi
+
+    require_command "nvim"
 
     apt_install "clangd"
+    yum_install "clang-tools-extra"
 
-    apt_install "silversearcher-ag" "ag"
-    ag_install
+    cargo install ripgrep
 
     if confirm "I will now replace your vim configuration."; then
-        rm -rf "$HOME/.vim"
-        rm -f "$HOME/.vimrc"
         rm -rf "$HOME/.config/nvim"
-
-        curl -sSLo "$HOME/.vimrc" "$dotfiles_url/home/.vimrc"
         curl -sSLo "$HOME/.config/nvim/init.vim" --create-dirs \
             "$dotfiles_url/home/.config/nvim/init.vim"
-        curl -sSLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
-            "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
-
-        set -- "coc-settings.json"
-        for f in "$@"; do
-            curl -sSLo "$HOME/.vim/$f" "$dotfiles_url/home/.vim/$f"
-        done
-
-        echo "This will look weird. But in 5 seconds I will start vim and set it up."
-        echo "Don't worry, it will close right afterward..."
-        sleep 5
-        vim -c ":PlugInstall" -c ":qall!"
-        vim -c ":CocInstall -sync coc-rust-analyzer" -c ":qall!"
-        vim -c ":CocInstall -sync coc-clangd" -c ":qall!"
     fi
 }
 
@@ -214,7 +182,6 @@ sync_gui() {
 
     if confirm "All the basic stuff is done. I can now setup the gui."; then
         sudo add-apt-repository -y ppa:papirus/papirus
-        sudo apt-add-repository -y ppa:neovim-ppa/unstable
         sudo apt update
 
         apt_install "papirus-icon-theme"
@@ -223,20 +190,20 @@ sync_gui() {
         papirus-folders -t Papirus -C nordic -u
         papirus-folders -t Papirus-Dark -C nordic -u
 
-        mkdir -p "$HOME/.local/share/fonts"
-        curl -sSLo "$workdir/PerfectDOSVGA437Win.tar.xz" "$dotfiles_url/home/.local/share/fonts/PerfectDOSVGA437Win.tar.xz"
+        curl -sSLo "$workdir/PerfectDOSVGA437Win.tar.xz" --create-dirs \
+            "$dotfiles_url/home/.local/share/fonts/PerfectDOSVGA437Win.tar.xz"
         tar xf "$workdir/PerfectDOSVGA437Win.tar.xz" -C "$HOME/.local/share/fonts"
 
-        mkdir -p "$HOME/.local/share/fonts"
-        curl -sSLo "$workdir/AcPlus_IBM_BIOS.tar.xz" "$dotfiles_url/home/.local/share/fonts/AcPlus_IBM_BIOS.tar.xz"
+        curl -sSLo "$workdir/AcPlus_IBM_BIOS.tar.xz" --create-dirs \
+            "$dotfiles_url/home/.local/share/fonts/AcPlus_IBM_BIOS.tar.xz"
         tar xf "$workdir/AcPlus_IBM_BIOS.tar.xz" -C "$HOME/.local/share/fonts"
 
         fc-cache -f
 
         alacritty_install
         rm -rf "$HOME/.config/alacritty"
-        mkdir -p "$HOME/.config/alacritty"
-        curl -sSLo "$HOME/.config/alacritty/alacritty.toml" "$dotfiles_url/home/.config/alacritty/alacritty.toml"
+        curl -sSLo "$HOME/.config/alacritty/alacritty.toml" --create-dirs \
+            "$dotfiles_url/home/.config/alacritty/alacritty.toml"
     fi
     if confirm "If you're using an apple keyboard driver, I can configure it to act right on linux"; then
         echo 2 | sudo tee /sys/module/hid_apple/parameters/fnmode
@@ -247,11 +214,10 @@ sync_gui() {
 }
 
 sync_bin() {
-    mkdir -p "$HOME/bin"
-
-    set -- "ssh-tunnel" "modplay" "xsig"
-    for f in "$@"; do
-        curl -sSLo "$HOME/bin/$f" "$dotfiles_url/home/bin/$f"
+    set -- "" "modplay" "xsig"
+    for f in
+        curlOME/bin/$f" --create-dirs \
+            _url/home/bin/$f"
         chmod +x "$HOME/bin/$f"
     done
 }
@@ -266,7 +232,8 @@ require_command "curl"
 sync_git
 sync_shell
 sync_rust
-sync_vim
+sync_node
 sync_bin
+sync_vim
 sync_gdb
 sync_gui
