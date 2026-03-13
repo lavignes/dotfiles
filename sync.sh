@@ -215,16 +215,14 @@ sync_gui() {
 
 sync_bin() {
     set -- "" "modplay" "xsig"
-    for f in
-        curl -sSLo "$HOME/bin/$f" --create-dirs \
-            "$dotfiles_url/home/bin/$f"
+    for f in "$@"; do
+        curl -sSLo "$HOME/bin/$f" --create-dirs "$dotfiles_url/home/bin/$f"
         chmod +x "$HOME/bin/$f"
     done
 }
 
 sync_gdb() {
     rm -f "$HOME/.gdbinit"
-
     curl -sSLo "$HOME/.gdbinit" "$dotfiles_url/home/.gdbinit"
 }
 
