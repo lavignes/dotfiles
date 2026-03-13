@@ -154,10 +154,11 @@ sync_vim() {
         sudo apt-add-repository -y ppa:neovim-ppa/unstable
         apt_install "neovim"
     else
-        rm -f "$HOME/bin/nvim"
-        curl -sSLo "$HOME/bin/nvim" --create-dirs \
-            "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage"
-        chmod +x "$HOME/bin/nvim"
+        curl -sSLo "$workdir/nvim-linux-x86_64.tar.gz" \
+            "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz"
+        mkdir -p "$HOME/.local"
+        tar xzf "$workdir/nvim-linux-x86_64.tar.gz" --strip-components=1 \
+            -C "$HOME/.local"
     fi
 
     require_command "nvim"
@@ -191,6 +192,7 @@ sync_gui() {
         papirus-folders -t Papirus -C nordic -u
         papirus-folders -t Papirus-Dark -C nordic -u
 
+        mkdir -p "$HOME/.local/share/fonts"
         curl -sSLo "$workdir/PerfectDOSVGA437Win.tar.xz" --create-dirs \
             "$dotfiles_url/home/.local/share/fonts/PerfectDOSVGA437Win.tar.xz"
         tar xf "$workdir/PerfectDOSVGA437Win.tar.xz" -C "$HOME/.local/share/fonts"
