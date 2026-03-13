@@ -161,7 +161,7 @@ require('render-markdown').setup({
 
 require('avante').setup({
     windows = {
-        sidebar_header = { enabled = false },
+        sidebar_header = { rounded = false },
         spinner = {
             editing = { '|', '/', '-', '\\' },
             generating = { '|', '/', '-', '\\' },
@@ -171,24 +171,13 @@ require('avante').setup({
     input = {
         provider = 'native',
     },
-    --[[
-    provider = 'bedrock',
-    providers = {
-        bedrock = {
-            aws_region = 'us-west-2',
-            aws_profile = 'avante-bedrock',
-        },
-    },
-    --]]
+    mode = "legacy",
     provider = 'kiro',
     acp_providers = {
         kiro = {
             command = 'kiro-cli',
             args = { 'acp' },
         },
-    },
-    behavior = {
-        auto_approve_tool_permissions = false,
     },
 })
 vim.api.nvim_create_user_command('Chat', 'AvanteChat', {})
