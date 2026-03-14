@@ -17,7 +17,6 @@ vim.pack.add({
     'https://github.com/nvim-lualine/lualine.nvim',
     'https://github.com/mg979/vim-visual-multi',
     'https://github.com/rafi/awesome-vim-colorschemes',
-    'https://github.com/MeanderingProgrammer/render-markdown.nvim',
 
     -- Telescope
     'https://github.com/nvim-telescope/telescope-fzf-native.nvim',
@@ -51,7 +50,7 @@ vim.opt.modeline = true
 vim.opt.backspace = {'indent', 'eol', 'start'}
 vim.opt.number = true
 vim.opt.wrap = false
-vim.opt.colorcolumn = {80}
+vim.opt.colorcolumn = {80, 120}
 vim.opt.cmdheight = 2
 vim.opt.laststatus = 3
 vim.opt.showmode = false
@@ -110,13 +109,6 @@ require('lualine').setup({
         theme = 'jellybeans',
         component_separators = { left = '|', right = '|'},
         section_separators = { left = '', right = ''},
-        disabled_filetypes = {
-            'NvimTree',
-            'Avante',
-            'AvanteSelectedFiles',
-            'AvanteInput',
-            'AvanteTodos',
-        },
     },
 })
 
@@ -151,15 +143,19 @@ vim.diagnostic.config({
     },
 })
 
-require('render-markdown').setup({
-    completions = { lsp = { enabled = true } },
-    file_types = {
-        'markdown',
-        'Avante',
-    },
-})
-
 require('avante').setup({
+    behaviour = {
+        auto_approve_tool_permissions = true,
+        confirmation_ui_style = "popup",
+    },
+    mode = "legacy",
+    provider = 'kiro',
+    acp_providers = {
+        kiro = {
+            command = 'kiro-cli',
+            args = { 'acp' },
+        },
+    },
     windows = {
         sidebar_header = { rounded = false },
         spinner = {
@@ -170,14 +166,6 @@ require('avante').setup({
     },
     input = {
         provider = 'native',
-    },
-    mode = "legacy",
-    provider = 'kiro',
-    acp_providers = {
-        kiro = {
-            command = 'kiro-cli',
-            args = { 'acp' },
-        },
     },
 })
 vim.api.nvim_create_user_command('Chat', 'AvanteChat', {})
@@ -206,11 +194,17 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- Java
 require('java').setup({
-    jdk = { auto_install = false },
+    jdk = {
+        auto_install = false,
+    },
     spring_boot_tools = { enable = false },
 })
 vim.lsp.config('jdtls', {
     capabilities = capabilities,
+    cmd_env = {
+        JAVA_HOME = '/usr/lib/jvm/java-21-amazon-corretto',
+        PATH = '/usr/lib/jvm/java-21-amazon-corretto/bin:' .. vim.fn.getenv('PATH'),
+    },
     settings = {
         java = {
             configuration = {
