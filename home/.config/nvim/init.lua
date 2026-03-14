@@ -123,7 +123,7 @@ vim.api.nvim_create_user_command('Man', 'Telescope man_pages', {})
 vim.api.nvim_create_user_command('Used', 'Telescope lsp_references', {})
 vim.api.nvim_create_user_command('Def', 'Telescope lsp_definitions', {})
 vim.api.nvim_create_user_command('Files', 'Telescope find_files', {})
-vim.api.nvim_create_user_command('Grep', 'Telescope find_string', {})
+vim.api.nvim_create_user_command('Grep', 'Telescope grep_string', {})
 vim.api.nvim_create_user_command('Buffers', 'Telescope buffers', {})
 
 -- LSP/DAP
