@@ -30,6 +30,9 @@ vim.pack.add({
 
     -- Completion
     'https://github.com/hrsh7th/cmp-nvim-lsp',
+    'https://github.com/hrsh7th/cmp-buffer',
+    'https://github.com/hrsh7th/cmp-path',
+    'https://github.com/hrsh7th/cmp-cmdline',
     'https://github.com/hrsh7th/nvim-cmp',
 
     -- Java
@@ -135,10 +138,10 @@ vim.diagnostic.config({
     },
     signs = {
         text = {
-            [vim.diagnostic.severity.ERROR] = "!!",
-            [vim.diagnostic.severity.WARN] = "??",
-            [vim.diagnostic.severity.INFO] = "~~",
-            [vim.diagnostic.severity.HINT] = "~~",
+            [vim.diagnostic.severity.ERROR] = "!",
+            [vim.diagnostic.severity.WARN] = "?",
+            [vim.diagnostic.severity.INFO] = "~",
+            [vim.diagnostic.severity.HINT] = "~",
         },
     },
 })
@@ -188,6 +191,22 @@ cmp.setup({
     mapping = cmp.mapping.preset.insert({
         ['<CR>'] = cmp.mapping.confirm({ select = true })
     }),
+})
+cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources(
+        {
+            { name = 'path' }
+        },
+        {
+            { name = 'cmdline' },
+        }
+    ),
+    matching = { disallow_symbol_nonprefix_matching = false },
+})
+cmp.setup.cmdline({ '/', '?' }, {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = { { name = 'buffer' } },
 })
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
