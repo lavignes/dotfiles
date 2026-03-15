@@ -11,12 +11,15 @@ vim.pack.add({
     -- Common Lua Libs
     'https://github.com/nvim-lua/plenary.nvim',
     'https://github.com/MunifTanjim/nui.nvim',
+    'https://github.com/folke/snacks.nvim',
 
     -- QoL
     'https://github.com/nvim-tree/nvim-tree.lua',
     'https://github.com/nvim-lualine/lualine.nvim',
     'https://github.com/mg979/vim-visual-multi',
     'https://github.com/rafi/awesome-vim-colorschemes',
+    'https://github.com/lewis6991/gitsigns.nvim',
+    'https://github.com/ntpeters/vim-better-whitespace',
 
     -- Telescope
     'https://github.com/nvim-telescope/telescope-fzf-native.nvim',
@@ -45,6 +48,7 @@ vim.api.nvim_create_user_command('PackInfo', function() vim.notify(vim.inspect(v
 -- Opts
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
+vim.opt.clipboard = 'unnamedplus'
 vim.opt.termguicolors = true
 vim.opt.mousemoveevent = true
 vim.opt.wildmenu = true
@@ -64,13 +68,17 @@ vim.opt.tabstop = 4
 
 vim.cmd.colorscheme('jellybeans')
 
+-- Snacks
+require('snacks').setup()
+
 -- Tree
-require("nvim-tree").setup({
+require('nvim-tree').setup({
     renderer = {
         add_trailing = true,
         group_empty = true,
         hidden_display = 'all',
         icons = {
+            symlink_arrow = '->',
             glyphs = {
                 default = ' ',
                 modified = '*',
@@ -79,6 +87,8 @@ require("nvim-tree").setup({
                     arrow_closed = '+',
                     arrow_open = '-',
                     open = '-',
+                    empty = '+',
+                    empty_open = '-',
                 },
                 git = {
                     unstaged = '?',
@@ -123,7 +133,7 @@ vim.api.nvim_create_user_command('Man', 'Telescope man_pages', {})
 vim.api.nvim_create_user_command('Used', 'Telescope lsp_references', {})
 vim.api.nvim_create_user_command('Def', 'Telescope lsp_definitions', {})
 vim.api.nvim_create_user_command('Files', 'Telescope find_files', {})
-vim.api.nvim_create_user_command('Grep', 'Telescope grep_string', {})
+vim.api.nvim_create_user_command('Ag', 'Telescope live_grep', {})
 vim.api.nvim_create_user_command('Buffers', 'Telescope buffers', {})
 
 -- LSP/DAP
@@ -138,20 +148,22 @@ vim.diagnostic.config({
     },
     signs = {
         text = {
-            [vim.diagnostic.severity.ERROR] = "!",
-            [vim.diagnostic.severity.WARN] = "?",
-            [vim.diagnostic.severity.INFO] = "~",
-            [vim.diagnostic.severity.HINT] = "~",
+            [vim.diagnostic.severity.ERROR] = '!!',
+            [vim.diagnostic.severity.WARN] = '??',
+            [vim.diagnostic.severity.INFO] = '>>',
+            [vim.diagnostic.severity.HINT] = '>>',
         },
     },
 })
 
+vim.api.nvim_create_user_command('Rename', function() vim.lsp.buf.rename() end, {})
+
 require('avante').setup({
     behaviour = {
         auto_approve_tool_permissions = true,
-        confirmation_ui_style = "popup",
+        confirmation_ui_style = 'popup',
     },
-    mode = "legacy",
+    mode = 'legacy',
     provider = 'kiro',
     acp_providers = {
         kiro = {
@@ -167,11 +179,16 @@ require('avante').setup({
             thinking = { '|', '/', '-', '\\' },
         },
     },
+    selector = {
+        provider = 'telescope',
+    },
     input = {
-        provider = 'native',
+        provider = 'snacks',
     },
 })
 vim.api.nvim_create_user_command('Chat', 'AvanteChat', {})
+vim.api.nvim_create_user_command('ChatStop', 'AvanteStop', {})
+vim.api.nvim_create_user_command('ChatHistory', 'AvanteHistory', {})
 
 -- Completion
 local cmp = require('cmp')
