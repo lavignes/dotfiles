@@ -253,6 +253,15 @@ sync_vim() {
 
     cargo install ripgrep
 
+    if [ "$os_pkg_manager" = "apt" ]; then
+        sudo apt install libgcc-14-dev
+        BINDGEN_EXTRA_CLANG_ARGS="-I/usr/lib/gcc/x86_64-linux-gnu/14/include" \
+            cargo install --locked tree-sitter-cli
+    else
+        BINDGEN_EXTRA_CLANG_ARGS="-I$HOME/.local/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include" \
+            cargo install --locked tree-sitter-cli
+    fi
+
     if confirm "I will now replace your vim configuration."; then
         rm -rf "$HOME/.config/nvim"
         curl -sSLo "$HOME/.config/nvim/init.lua" --create-dirs \

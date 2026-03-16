@@ -1,8 +1,13 @@
 vim.api.nvim_create_autocmd('PackChanged', {
     callback = function(event)
         local name, kind = event.data.spec.name, event.data.kind
-        if name == 'avante.nvim' and (kind == 'install' or kind == 'update') then
-            vim.system({ 'make', 'BUILD_FROM_SOURCE=true' }, { cwd = event.data.path })
+        if kind == 'install' or kind == 'update' then
+            if name == 'avante.nvim' then
+                vim.system({ 'make', 'BUILD_FROM_SOURCE=true' }, { cwd = event.data.path })
+            end
+            if name == 'nvim-treesitter' then
+                vim.cmd('TSUpdate')
+            end
         end
     end
 })
@@ -27,6 +32,7 @@ vim.pack.add({
 
     -- LSP/DAP
     'https://github.com/neovim/nvim-lspconfig',
+    'https://github.com/nvim-treesitter/nvim-treesitter',
     'https://github.com/mfussenegger/nvim-dap',
     'https://github.com/soulis-1256/eagle.nvim',
     'https://github.com/yetone/avante.nvim',
@@ -61,10 +67,10 @@ vim.opt.colorcolumn = {80, 120}
 vim.opt.cmdheight = 2
 vim.opt.laststatus = 3
 vim.opt.showmode = false
-vim.opt.cursorline = true
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 4
 vim.opt.tabstop = 4
+vim.opt.lazyredraw = true
 
 vim.cmd.colorscheme('jellybeans')
 
@@ -138,6 +144,12 @@ vim.api.nvim_create_user_command('Buffers', 'Telescope buffers', {})
 
 -- LSP/DAP
 require('eagle').setup()
+
+local ts = require('nvim-treesitter')
+ts.setup()
+ts.install({
+    'yaml', 'java', 'rust', 'typescript',
+})
 
 vim.diagnostic.config({
     float = {
@@ -213,7 +225,7 @@ cmp.setup.cmdline(':', {
     mapping = cmp.mapping.preset.cmdline(),
     sources = cmp.config.sources(
         {
-            { name = 'path' }
+            { name = 'path' },
         },
         {
             { name = 'cmdline' },
