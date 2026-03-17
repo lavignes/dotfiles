@@ -1,7 +1,11 @@
+# Put host-local stuff in ~/.zshlocal :-)
+[ -s "$HOME/.zshlocal" ] && \. "$HOME/.zshlocal"
+
 export PATH="$HOME/bin:$PATH"
 export PATH="/usr/local/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
+export LD_LIBRARY_PATH="$HOME/.local/lib64:$LD_LIBRARY_PATH"
 
 if [[ "$TERM_PROGRAM" == "kiro" ]]; then
 
@@ -19,5 +23,3 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-## Put host-local stuff in ~/.zshlocal :-)
-[ -s "$HOME/.zshlocal" ] && \. "$HOME/.zshlocal"

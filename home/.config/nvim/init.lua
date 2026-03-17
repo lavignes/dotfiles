@@ -49,7 +49,11 @@ vim.pack.add({
 })
 
 vim.api.nvim_create_user_command('PackUpdate', function() vim.pack.update() end, {})
-vim.api.nvim_create_user_command('PackInfo', function() vim.notify(vim.inspect(vim.pack.get())) end, {})
+vim.api.nvim_create_user_command('PackInfo', function()
+    local packs = vim.inspect(vim.pack.get())
+    vim.cmd('vnew')
+    vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(packs, '\n', true))
+end, {})
 
 -- Opts
 vim.g.loaded_netrw = 1
@@ -101,9 +105,9 @@ require('nvim-tree').setup({
                     staged = '!',
                     unmerged = '?',
                     untracked = '?',
-                    renamed = '(renamed)',
-                    deleted = '(deleted)',
-                    ignored = '(ignored)',
+                    renamed = 'renamed',
+                    deleted = 'deleted',
+                    ignored = 'ignored',
                 },
             },
             show = { folder_arrow = false },
@@ -111,6 +115,7 @@ require('nvim-tree').setup({
     },
     filters = {
         dotfiles = true,
+        git_ignored = false,
     },
     on_attach = function(buffer)
         local api = require('nvim-tree.api')
