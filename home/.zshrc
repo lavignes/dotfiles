@@ -7,19 +7,16 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
 export LD_LIBRARY_PATH="$HOME/.local/lib64:$LD_LIBRARY_PATH"
 
-if [[ "$TERM_PROGRAM" == "kiro" ]]; then
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="sunaku"
+plugins=(git history-substring-search)
+source $ZSH/oh-my-zsh.sh
 
-else
-    export ZSH="$HOME/.oh-my-zsh"
-    ZSH_THEME="sunaku"
-    plugins=(git history-substring-search)
-    source $ZSH/oh-my-zsh.sh
-
-    bindkey "$terminfo[kcuu1]" history-substring-search-up
-    bindkey "$terminfo[kcud1]" history-substring-search-down
-fi
+bindkey "$terminfo[kcuu1]" history-substring-search-up
+bindkey "$terminfo[kcud1]" history-substring-search-down
+bindkey "^[[1;3C" forward-word
+bindkey "^[[1;3D" backward-word
 
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-

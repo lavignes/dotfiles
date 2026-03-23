@@ -9,6 +9,7 @@ args = ["-l", "-c", "tmux attach -t $(tmux ls | grep -v attached | head -1 | cut
 program = "/bin/zsh"
 
 [window]
+option_as_alt = "Both"
 decorations = "full"
 opacity = 0.98
 resize_increments = true
@@ -21,15 +22,11 @@ lines = 24
 blinking = "Always"
 
 [font]
-size = 32
-#offset = { x = 0, y = 4 }
+size = 16
 builtin_box_drawing = false
 
 [font.normal]
-#family = "Noto Sans Mono"
-#family = "ComicCode"
-#family = "ACPlus IBM BIOS"
-family = "PerfectDOSVGA437Win"
+family = "Comic Code"
 
 [font.bold]
 style = "Regular"
