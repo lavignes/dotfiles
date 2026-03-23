@@ -18,11 +18,15 @@ vim.pack.add({
     'https://github.com/MunifTanjim/nui.nvim',
     'https://github.com/folke/snacks.nvim',
 
+    -- Colorschemes
+    'https://github.com/rafi/awesome-vim-colorschemes',
+    'https://github.com/rktjmp/lush.nvim',
+    'https://github.com/zenbones-theme/zenbones.nvim',
+
     -- QoL
     'https://github.com/nvim-tree/nvim-tree.lua',
     'https://github.com/nvim-lualine/lualine.nvim',
     'https://github.com/mg979/vim-visual-multi',
-    'https://github.com/rafi/awesome-vim-colorschemes',
     'https://github.com/lewis6991/gitsigns.nvim',
     'https://github.com/ntpeters/vim-better-whitespace',
 
@@ -36,6 +40,7 @@ vim.pack.add({
     'https://github.com/mfussenegger/nvim-dap',
     'https://github.com/soulis-1256/eagle.nvim',
     'https://github.com/yetone/avante.nvim',
+    'https://github.com/github/copilot.vim',
 
     -- Completion
     'https://github.com/hrsh7th/cmp-nvim-lsp',
@@ -153,7 +158,7 @@ require('eagle').setup()
 local ts = require('nvim-treesitter')
 ts.setup()
 ts.install({
-    'yaml', 'java', 'rust', 'typescript',
+    'yaml', 'java', 'rust', 'typescript', 'c',
 })
 
 vim.diagnostic.config({
@@ -206,6 +211,18 @@ require('avante').setup({
 vim.api.nvim_create_user_command('Chat', 'AvanteChat', {})
 vim.api.nvim_create_user_command('ChatStop', 'AvanteStop', {})
 vim.api.nvim_create_user_command('ChatHistory', 'AvanteHistory', {})
+
+-- Copilot
+vim.g.copilot_enabled = false
+vim.g.copilot_no_tab_map = true
+vim.keymap.set('i', '<F11>', 'copilot#AcceptWord("")', {
+    expr = true,
+    replace_keycodes = false,
+})
+vim.keymap.set('i', '<F12>', 'copilot#Accept("")', {
+    expr = true,
+    replace_keycodes = false,
+})
 
 -- Completion
 local cmp = require('cmp')
@@ -279,3 +296,9 @@ vim.lsp.config('ts_ls', {
     capabilities = capabilities,
 })
 vim.lsp.enable('ts_ls')
+
+-- C/C++
+vim.lsp.config('clangd', {
+    capabilities = capabilities,
+})
+vim.lsp.enable('clangd')
