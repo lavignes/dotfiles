@@ -178,7 +178,21 @@ vim.diagnostic.config({
     },
 })
 
+vim.api.nvim_create_autocmd('BufWritePre', {
+    callback = function(event)
+        local bufnr = event.buf
+        local clients = vim.lsp.get_clients({
+            bufnr = bufnr,
+            effective_capabilities = { documentFormattingProvider = true },
+        })
+        if #clients > 0 then
+          vim.lsp.buf.format({ bufnr = bufnr, async = false })
+        end
+    end
+})
+
 vim.api.nvim_create_user_command('Rename', function() vim.lsp.buf.rename() end, {})
+vim.api.nvim_create_user_command('Format', function() vim.lsp.buf.format() end, {})
 
 require('avante').setup({
     behaviour = {
@@ -231,6 +245,9 @@ cmp.setup({
         completion = cmp.config.window.bordered(),
         documentation = cmp.config.window.bordered(),
     },
+    mapping = cmp.mapping.preset.insert({
+        ['<CR>'] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace }),
+    }),
     sources = cmp.config.sources(
         {
             { name = 'nvim_lsp' },
@@ -239,11 +256,9 @@ cmp.setup({
             { name = 'buffer' },
         }
     ),
-    mapping = cmp.mapping.preset.insert({
-        ['<CR>'] = cmp.mapping.confirm({ select = true })
-    }),
 })
 cmp.setup.cmdline(':', {
+    matching = { disallow_symbol_nonprefix_matching = false },
     mapping = cmp.mapping.preset.cmdline(),
     sources = cmp.config.sources(
         {
@@ -253,7 +268,6 @@ cmp.setup.cmdline(':', {
             { name = 'cmdline' },
         }
     ),
-    matching = { disallow_symbol_nonprefix_matching = false },
 })
 cmp.setup.cmdline({ '/', '?' }, {
     mapping = cmp.mapping.preset.cmdline(),
