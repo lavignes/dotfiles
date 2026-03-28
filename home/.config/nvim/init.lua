@@ -181,6 +181,10 @@ vim.diagnostic.config({
 vim.api.nvim_create_autocmd('BufWritePre', {
     callback = function(event)
         local bufnr = event.buf
+	    local filetype = vim.bo[bufnr].filetype
+        if filetype == 'java' then
+            return
+        end
         local clients = vim.lsp.get_clients({
             bufnr = bufnr,
             effective_capabilities = { documentFormattingProvider = true },
@@ -193,6 +197,7 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 
 vim.api.nvim_create_user_command('Rename', function() vim.lsp.buf.rename() end, {})
 vim.api.nvim_create_user_command('Format', function() vim.lsp.buf.format() end, {})
+vim.api.nvim_create_user_command('Doc', function() vim.lsp.buf.hover() end, {})
 
 require('avante').setup({
     behaviour = {
@@ -316,3 +321,9 @@ vim.lsp.config('clangd', {
     capabilities = capabilities,
 })
 vim.lsp.enable('clangd')
+
+-- Rust
+vim.lsp.config('rust_analyzer', {
+    capabilities = capabilities
+})
+vim.lsp.enable('rust_analyzer')
