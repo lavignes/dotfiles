@@ -210,6 +210,9 @@ require('avante').setup({
         kiro = {
             command = 'kiro-cli',
             args = { 'acp' },
+            env = {
+                HOME = vim.fn.getenv('HOME'),
+            },
         },
     },
     windows = {
