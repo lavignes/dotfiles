@@ -80,6 +80,7 @@ vim.opt.expandtab = true
 vim.opt.shiftwidth = 4
 vim.opt.tabstop = 4
 vim.opt.lazyredraw = true
+vim.opt.splitright = true
 
 vim.cmd.colorscheme('jellybeans')
 
@@ -91,16 +92,12 @@ require('nvim-tree').setup({
     renderer = {
         add_trailing = true,
         group_empty = true,
-        hidden_display = 'simple',
-        highlight_opened_files = 'all',
+        hidden_display = 'all',
         icons = {
             symlink_arrow = '->',
             glyphs = {
                 default = ' ',
-                symlink = ' ',
-                bookmark = '!',
                 modified = '*',
-                hidden = '.',
                 folder = {
                     default = '+',
                     arrow_closed = '+',
@@ -108,11 +105,9 @@ require('nvim-tree').setup({
                     open = '-',
                     empty = '+',
                     empty_open = '-',
-                    symlink = '+',
-                    symlink_open = '-',
                 },
                 git = {
-                    unstaged = '*',
+                    unstaged = '?',
                     staged = '!',
                     unmerged = '?',
                     untracked = '?',
@@ -121,15 +116,12 @@ require('nvim-tree').setup({
                     ignored = 'ignored',
                 },
             },
-            show = {
-                folder_arrow = false,
-            },
-            git_placement = "after",
+            show = { folder_arrow = false },
         },
     },
     filters = {
         dotfiles = true,
-        git_ignored = true,
+        git_ignored = false,
     },
     on_attach = function(buffer)
         local api = require('nvim-tree.api')
@@ -191,7 +183,7 @@ vim.api.nvim_create_autocmd('BufWritePre', {
     callback = function(event)
         local bufnr = event.buf
 	    local filetype = vim.bo[bufnr].filetype
-        if filetype == 'java' then
+        if filetype == 'java' or filetype == 'typescript' then
             return
         end
         local clients = vim.lsp.get_clients({
@@ -217,6 +209,13 @@ require('avante').setup({
     },
     mode = 'agentic',
     provider = avante_provider,
+    providers = {
+        bedrock = {
+            aws_profile = 'lavignes-bedrock-account',
+            aws_region = 'us-west-2',
+            model = 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+        },
+    },
     acp_providers = {
         kiro = {
             command = 'kiro-cli',
@@ -250,6 +249,7 @@ require('avante').setup({
         provider = 'snacks',
     },
 })
+
 vim.api.nvim_create_user_command('Chat', 'AvanteChat', {})
 vim.api.nvim_create_user_command('ChatStop', 'AvanteStop', {})
 vim.api.nvim_create_user_command('ChatHistory', 'AvanteHistory', {})
@@ -257,6 +257,7 @@ vim.api.nvim_create_user_command('ChatHistory', 'AvanteHistory', {})
 -- Copilot
 vim.g.copilot_enabled = false
 vim.g.copilot_no_tab_map = true
+
 vim.keymap.set('i', '<F11>', 'copilot#AcceptWord("")', {
     expr = true,
     replace_keycodes = false,
