@@ -91,12 +91,16 @@ require('nvim-tree').setup({
     renderer = {
         add_trailing = true,
         group_empty = true,
-        hidden_display = 'all',
+        hidden_display = 'simple',
+        highlight_opened_files = 'all',
         icons = {
             symlink_arrow = '->',
             glyphs = {
                 default = ' ',
+                symlink = ' ',
+                bookmark = '!',
                 modified = '*',
+                hidden = '.',
                 folder = {
                     default = '+',
                     arrow_closed = '+',
@@ -104,9 +108,11 @@ require('nvim-tree').setup({
                     open = '-',
                     empty = '+',
                     empty_open = '-',
+                    symlink = '+',
+                    symlink_open = '-',
                 },
                 git = {
-                    unstaged = '?',
+                    unstaged = '*',
                     staged = '!',
                     unmerged = '?',
                     untracked = '?',
@@ -115,12 +121,15 @@ require('nvim-tree').setup({
                     ignored = 'ignored',
                 },
             },
-            show = { folder_arrow = false },
+            show = {
+                folder_arrow = false,
+            },
+            git_placement = "after",
         },
     },
     filters = {
         dotfiles = true,
-        git_ignored = false,
+        git_ignored = true,
     },
     on_attach = function(buffer)
         local api = require('nvim-tree.api')
