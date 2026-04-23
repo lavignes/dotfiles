@@ -208,13 +208,15 @@ vim.api.nvim_create_user_command('Rename', function() vim.lsp.buf.rename() end, 
 vim.api.nvim_create_user_command('Format', function() vim.lsp.buf.format() end, {})
 vim.api.nvim_create_user_command('Doc', function() vim.lsp.buf.hover() end, {})
 
+local avante_provider = vim.fn.executable('copilot') == 1 and 'copilotacp' or 'kiro'
+
 require('avante').setup({
     behaviour = {
         auto_approve_tool_permissions = true,
         confirmation_ui_style = 'popup',
     },
-    mode = 'legacy',
-    provider = 'kiro',
+    mode = 'agentic',
+    provider = avante_provider,
     acp_providers = {
         kiro = {
             command = 'kiro-cli',
@@ -223,9 +225,18 @@ require('avante').setup({
                 HOME = vim.fn.getenv('HOME'),
             },
         },
+        copilotacp = {
+            command = 'copilot',
+            args = { '--acp', '--allow-all-tools' },
+            env = {
+                HOME = vim.fn.getenv('HOME'),
+                COPILOT_GITHUB_TOKEN = vim.fn.getenv('COPILOT_GITHUB_TOKEN'),
+            },
+            auth_method = 'copilot-login',
+        },
     },
     windows = {
-        sidebar_header = { rounded = false },
+        sidebar_header = { enabled = false },
         spinner = {
             editing = { '|', '/', '-', '\\' },
             generating = { '|', '/', '-', '\\' },
