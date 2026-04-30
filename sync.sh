@@ -255,9 +255,9 @@ nvim_needs_update() {
         return 0
     fi
     current="$(nvim --version | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-    printf '%s\n%s\n' "$nvim_min_version" "$current" | sort -V -C
-    # sort -V -C returns 0 if already sorted (current >= min), 1 otherwise
-    test $? -ne 0
+    oldest="$(printf '%s\n%s\n' "$nvim_min_version" "$current" | sort -V | head -1)"
+    # If the oldest version is the current one, it's too old
+    [ "$oldest" = "$current" ] && [ "$current" != "$nvim_min_version" ]
 }
 
 sync_vim() {
