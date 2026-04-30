@@ -160,6 +160,9 @@ sync_rust() {
 }
 
 sync_alacritty() {
+    if [ "$os" = "yum" ]; then
+        return
+    fi
     if confirm "I will now replace your alacritty configuration."; then
         if [ "$os" = "apt" ]; then
             sudo apt -y install alacritty
@@ -268,6 +271,9 @@ sync_themes() {
 }
 
 sync_fonts() {
+    if [ "$os" = "yum" ]; then
+        return
+    fi
     if confirm "I will now install custom fonts."; then
         if [ "$os" = "macos" ]; then
             fonts_dir="$HOME/Library/Fonts"
