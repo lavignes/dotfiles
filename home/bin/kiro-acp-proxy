@@ -218,6 +218,23 @@ def forward_agent_to_client(child_stdout):
             log.info("translating _kiro.dev/commands/available → available_commands_update")
             msg = translate_kiro_commands(msg)
 
+        # Translate metadata → usage_update so the client can display context usage
+        elif msg.get("method") == "_kiro.dev/metadata":
+            params = msg.get("params", {})
+            pct = params.get("contextUsagePercentage")
+            if pct is not None:
+                msg = {
+                    "jsonrpc": "2.0",
+                    "method": "session/update",
+                    "params": {
+                        "sessionId": params.get("sessionId", ""),
+                        "update": {
+                            "sessionUpdate": "usage_update",
+                            "contextUsagePercentage": pct,
+                        },
+                    },
+                }
+
         # Drop Kiro extension notifications the client cannot handle
         elif msg.get("method", "").startswith("_kiro.dev/"):
             log.debug("dropping unsupported notification: %s", msg.get("method"))
