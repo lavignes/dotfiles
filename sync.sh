@@ -278,12 +278,10 @@ sync_vim() {
                 "https://github.com/neovim/neovim.git" "$workdir/neovim"
             cd "$workdir/neovim"
             if [ "$os" = "yum" ]; then
-                printf '#!/bin/sh\nexec %s -mcmodel=medium "$@"\n' \
-                    "$HOME/.local/bin/gcc" > "$workdir/gcc-wrapper"
-                chmod +x "$workdir/gcc-wrapper"
-                export CC="$workdir/gcc-wrapper"
+                export CC="$HOME/.local/bin/gcc"
                 export CXX="$HOME/.local/bin/g++"
-                make -j CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local"
+                make -j CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local" \
+                    DEPS_CMAKE_FLAGS="-DUSE_BUNDLED_TS_PARSERS=OFF"
             else
                 make -j CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local"
             fi
