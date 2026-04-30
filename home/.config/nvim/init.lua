@@ -87,7 +87,10 @@ vim.cmd.colorscheme('jellybeans')
 
 -- Snacks
 require('snacks').setup({
-    picker = { ui_select = true },
+    picker = {
+        ui_select = true,
+        layout = { preset = 'select', layout = { width = 0.8 } },
+    },
 })
 
 -- Tree
@@ -284,7 +287,14 @@ agentic.setup({
         width = '30%',
     },
     headers = {
-        chat = { title = 'Chat' },
+        chat = function(parts)
+            parts.title = 'Chat'
+            local pct = vim.g.agentic_context_pct
+            if pct then
+                return string.format('%s | ctx: %.0f%%%%', parts.title, pct)
+            end
+            return parts.title
+        end,
         todos = { title = 'Todos' },
         code = { title = 'Code' },
         files = { title = 'Files' },
@@ -310,14 +320,28 @@ agentic.setup({
         failed = 'T_T',
     },
     chat_icons = {
-        user = '',
-        agent = '',
+        user = '[user]',
+        agent = '[agent]',
     },
     message_icons = {
-        thinking = '>_<',
-        finished = '^_^',
-        stopped = '-_-',
-        error = 'T_T',
+        thinking = '[thinking]',
+        finished = '[finished]',
+        stopped = '[stopped]',
+        error = '[error]',
+    },
+    hooks = {
+        on_session_update = function(data)
+            local pct = data.update and data.update.contextUsagePercentage
+            if pct then
+                vim.g.agentic_context_pct = pct
+                local reg = require('agentic.session_registry')
+                local session = reg.sessions[data.tab_page_id]
+                if session and session.widget and session.widget.buf_nrs then
+                    local WD = require('agentic.ui.window_decoration')
+                    WD.render_header(session.widget.buf_nrs.chat, 'chat')
+                end
+            end
+        end,
     },
 })
 
