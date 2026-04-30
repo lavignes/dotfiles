@@ -254,9 +254,10 @@ nvim_needs_update() {
     if ! [ -x "$(command -v "nvim")" ]; then
         return 0
     fi
+    # Dev builds are unreliable; always rebuild
+    nvim --version | head -1 | grep -q "dev" && return 0
     current="$(nvim --version | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
     oldest="$(printf '%s\n%s\n' "$nvim_min_version" "$current" | sort -V | head -1)"
-    # If the oldest version is the current one, it's too old
     [ "$oldest" = "$current" ] && [ "$current" != "$nvim_min_version" ]
 }
 
