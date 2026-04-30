@@ -110,6 +110,11 @@ sync_gcc() {
     if confirm "I will now build and install gcc from source."; then
         sudo yum -y install texinfo
 
+        rm -rf "$HOME/.local/bin/as" "$HOME/.local/bin/ld" \
+            "$HOME/.local/bin/objdump" "$HOME/.local/bin/objcopy" \
+            "$HOME/.local/bin/nm" "$HOME/.local/bin/strip" \
+            "$HOME/.local/bin/ranlib" "$HOME/.local/bin/ar"
+
         git clone --depth 1 --branch binutils-2_44 \
             "https://sourceware.org/git/binutils-gdb.git" "$workdir/binutils"
         cd "$workdir/binutils"
@@ -119,6 +124,12 @@ sync_gcc() {
         make -j
         make install
         cd "$curdir"
+
+        rm -rf "$HOME/.local/bin/gcc" "$HOME/.local/bin/g++" \
+            "$HOME/.local/bin/cpp" "$HOME/.local/bin/c++" \
+            "$HOME/.local/bin/gcov" \
+            "$HOME/.local/lib/gcc" "$HOME/.local/lib64/libstdc++*" \
+            "$HOME/.local/libexec/gcc"
 
         git clone --depth 1 --branch releases/gcc-15 \
             "https://gcc.gnu.org/git/gcc.git" "$workdir/gcc"
@@ -189,6 +200,8 @@ sync_cmake() {
         sudo yum -y install perl-core
 
         if ! [ -x "$HOME/.local/bin/openssl" ]; then
+            rm -rf "$HOME/.local/lib64/libssl*" "$HOME/.local/lib64/libcrypto*" \
+                "$HOME/.local/include/openssl"
             git clone --depth 1 "https://github.com/openssl/openssl.git" "$workdir/openssl"
             cd "$workdir/openssl"
             ./Configure --prefix="$HOME/.local"
@@ -197,6 +210,8 @@ sync_cmake() {
             cd "$curdir"
         fi
 
+        rm -rf "$HOME/.local/bin/cmake" "$HOME/.local/bin/ctest" \
+            "$HOME/.local/bin/cpack" "$HOME/.local/share/cmake-*"
         git clone --depth 1 "https://github.com/Kitware/CMake.git" "$workdir/cmake"
         cd "$workdir/cmake"
         ./bootstrap --prefix="$HOME/.local" -- -DOPENSSL_ROOT_DIR="$HOME/.local"
