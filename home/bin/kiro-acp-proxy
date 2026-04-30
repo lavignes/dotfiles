@@ -1,0 +1,266 @@
+#!/usr/bin/env python3
+"""
+ACP proxy for kiro-cli that bridges Kiro's proprietary extensions to standard ACP.
+
+Spawns `kiro-cli acp` as a child process, forwarding all JSON-RPC messages
+between stdin/stdout. Intercepts and translates:
+
+  1. session/list       → handled locally from ~/.kiro/sessions/cli/*.json
+  2. initialize response → injects sessionCapabilities.list into agentCapabilities
+  3. _kiro.dev/commands/available → translated to standard available_commands_update
+     via session/update notification
+
+ACP stdio transport: newline-delimited JSON (no Content-Length framing).
+"""
+
+import json
+import logging
+import os
+import signal
+import subprocess
+import sys
+import tempfile
+import threading
+from pathlib import Path
+
+LOG_PATH = os.path.join(tempfile.gettempdir(), "kiro_acp_proxy.log")
+logging.basicConfig(
+    filename=LOG_PATH,
+    level=logging.DEBUG,
+    format="%(asctime)s [%(threadName)s] %(levelname)s %(message)s",
+)
+log = logging.getLogger("acp-proxy")
+
+SESSIONS_DIR = Path.home() / ".kiro" / "sessions" / "cli"
+
+# Thread-safe tracking of initialize request IDs we need to patch
+_pending_init_ids: set = set()
+_pending_init_lock = threading.Lock()
+
+# Lock for writing to stdout (both threads may write)
+_stdout_lock = threading.Lock()
+
+
+def read_message(stream, label=""):
+    """Read one newline-delimited JSON-RPC message from a byte stream."""
+    while True:
+        line = stream.readline()
+        if not line:
+            log.debug("[%s] EOF", label)
+            return None
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            msg = json.loads(line)
+        except json.JSONDecodeError as e:
+            log.warning("[%s] bad JSON: %s — %s", label, e, line[:200])
+            continue
+        log.debug("[%s] %s", label, line.decode("utf-8", errors="replace")[:500])
+        return msg
+
+
+def write_message(stream, msg, label=""):
+    """Write one newline-delimited JSON-RPC message to a byte stream."""
+    data = json.dumps(msg, separators=(",", ":")).encode("utf-8") + b"\n"
+    with _stdout_lock if stream is sys.stdout.buffer else threading.Lock():
+        stream.write(data)
+        stream.flush()
+    log.debug("[%s] %s", label, data[:500].rstrip().decode("utf-8", errors="replace"))
+
+
+def build_session_list(request):
+    """Build a session/list response by reading local session files."""
+    params = request.get("params") or {}
+    cwd_filter = params.get("cwd")
+
+    sessions = []
+    for path in SESSIONS_DIR.glob("*.json"):
+        if path.name.endswith(".lock"):
+            continue
+        try:
+            data = json.loads(path.read_text())
+        except (json.JSONDecodeError, OSError) as e:
+            log.warning("skipping %s: %s", path.name, e)
+            continue
+
+        session_cwd = data.get("cwd", "")
+        if cwd_filter and session_cwd != cwd_filter:
+            continue
+
+        title = data.get("title") or "(no title)"
+        # Enrich title with turn count and last assistant snippet
+        state = data.get("session_state") or {}
+        meta = state.get("conversation_metadata") or {}
+        turns = meta.get("user_turn_metadatas") or []
+        turn_count = len(turns)
+        summary = ""
+        if turns:
+            last = turns[-1].get("result", {}).get("Ok", {})
+            content = last.get("content", [])
+            if content and content[0].get("kind") == "text":
+                summary = content[0].get("data", "")[:80].split("\n")[0]
+        if summary:
+            title = f"{title} [{turn_count} turns] {summary}"
+        elif turn_count:
+            title = f"{title} [{turn_count} turns]"
+
+        sessions.append({
+            "sessionId": data.get("session_id", path.stem),
+            "cwd": session_cwd,
+            "title": title,
+            "updatedAt": data.get("updated_at"),
+        })
+
+    sessions.sort(key=lambda s: s.get("updatedAt") or "", reverse=True)
+    log.info("session/list → %d sessions (cwd_filter=%s)", len(sessions), cwd_filter)
+
+    return {
+        "jsonrpc": "2.0",
+        "id": request["id"],
+        "result": {"sessions": sessions},
+    }
+
+
+def patch_initialize_response(msg):
+    """Inject sessionCapabilities.list into an initialize response."""
+    result = msg.get("result")
+    if not result:
+        return msg
+    caps = result.setdefault("agentCapabilities", {})
+    caps.setdefault("sessionCapabilities", {})["list"] = {}
+    return msg
+
+
+def translate_kiro_commands(msg):
+    """Translate _kiro.dev/commands/available → standard available_commands_update.
+
+    Kiro sends:
+      {"method": "_kiro.dev/commands/available", "params": {"sessionId": "...", "commands": [...]}}
+
+    ACP standard expects:
+      {"method": "session/update", "params": {"sessionId": "...", "update": {
+          "sessionUpdate": "available_commands_update",
+          "availableCommands": [{"name": "...", "description": "..."}]
+      }}}
+    """
+    params = msg.get("params", {})
+    session_id = params.get("sessionId", "")
+    commands = params.get("commands", [])
+
+    available = []
+    for cmd in commands:
+        name = cmd.get("name", "").lstrip("/")
+        entry = {"name": name, "description": cmd.get("description", "")}
+        hint = cmd.get("hint") or cmd.get("input", {}).get("hint") if isinstance(cmd.get("input"), dict) else cmd.get("hint")
+        if hint:
+            entry["input"] = {"hint": hint}
+        available.append(entry)
+
+    return {
+        "jsonrpc": "2.0",
+        "method": "session/update",
+        "params": {
+            "sessionId": session_id,
+            "update": {
+                "sessionUpdate": "available_commands_update",
+                "availableCommands": available,
+            },
+        },
+    }
+
+
+def forward_client_to_agent(child_stdin):
+    """Read from our stdin → forward to kiro-cli. Intercept session/list."""
+    stdin = sys.stdin.buffer
+    while True:
+        msg = read_message(stdin, "client→proxy")
+        if msg is None:
+            log.info("client disconnected")
+            child_stdin.close()
+            return
+
+        method = msg.get("method")
+
+        # Intercept session/list — respond from filesystem
+        if method == "session/list":
+            response = build_session_list(msg)
+            write_message(sys.stdout.buffer, response, "proxy→client")
+            continue
+
+        # Track initialize requests so we can patch the response
+        if method == "initialize":
+            with _pending_init_lock:
+                _pending_init_ids.add(msg.get("id"))
+
+        write_message(child_stdin, msg, "proxy→agent")
+
+
+def forward_agent_to_client(child_stdout):
+    """Read from kiro-cli → forward to our stdout. Patch/translate as needed."""
+    while True:
+        msg = read_message(child_stdout, "agent→proxy")
+        if msg is None:
+            log.info("agent closed stdout")
+            return
+
+        # Patch initialize response to advertise session/list capability
+        msg_id = msg.get("id")
+        if msg_id is not None:
+            with _pending_init_lock:
+                if msg_id in _pending_init_ids:
+                    _pending_init_ids.discard(msg_id)
+                    log.info("patching initialize response id=%s", msg_id)
+                    msg = patch_initialize_response(msg)
+
+        # Translate Kiro proprietary commands notification → standard ACP
+        if msg.get("method") == "_kiro.dev/commands/available":
+            log.info("translating _kiro.dev/commands/available → available_commands_update")
+            msg = translate_kiro_commands(msg)
+
+        # Drop Kiro extension notifications the client cannot handle
+        elif msg.get("method", "").startswith("_kiro.dev/"):
+            log.debug("dropping unsupported notification: %s", msg.get("method"))
+            continue
+
+        write_message(sys.stdout.buffer, msg, "proxy→client")
+
+
+def main():
+    cmd = ["kiro-cli", "acp"] + sys.argv[1:]
+    log.info("proxy starting, log: %s", LOG_PATH)
+    log.info("spawning: %s", " ".join(cmd))
+
+    proc = subprocess.Popen(
+        cmd,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=sys.stderr,
+    )
+
+    # Forward SIGTERM/SIGINT to child
+    def relay_signal(signum, _frame):
+        proc.send_signal(signum)
+
+    signal.signal(signal.SIGTERM, relay_signal)
+    signal.signal(signal.SIGINT, relay_signal)
+
+    t_in = threading.Thread(
+        target=forward_client_to_agent, args=(proc.stdin,),
+        daemon=True, name="client→agent",
+    )
+    t_out = threading.Thread(
+        target=forward_agent_to_client, args=(proc.stdout,),
+        daemon=True, name="agent→client",
+    )
+
+    t_in.start()
+    t_out.start()
+
+    proc.wait()
+    log.info("kiro-cli exited with code %d", proc.returncode)
+    sys.exit(proc.returncode)
+
+
+if __name__ == "__main__":
+    main()

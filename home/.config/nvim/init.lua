@@ -41,6 +41,7 @@ vim.pack.add({
     'https://github.com/soulis-1256/eagle.nvim',
     'https://github.com/yetone/avante.nvim',
     'https://github.com/github/copilot.vim',
+    'https://github.com/carlos-algms/agentic.nvim',
 
     -- Completion
     'https://github.com/hrsh7th/cmp-nvim-lsp',
@@ -85,7 +86,9 @@ vim.opt.splitright = true
 vim.cmd.colorscheme('jellybeans')
 
 -- Snacks
-require('snacks').setup()
+require('snacks').setup({
+    picker = { ui_select = true },
+})
 
 -- Tree
 require('nvim-tree').setup({
@@ -250,10 +253,6 @@ require('avante').setup({
     },
 })
 
-vim.api.nvim_create_user_command('Chat', 'AvanteChat', {})
-vim.api.nvim_create_user_command('ChatStop', 'AvanteStop', {})
-vim.api.nvim_create_user_command('ChatHistory', 'AvanteHistory', {})
-
 -- Copilot
 vim.g.copilot_enabled = false
 vim.g.copilot_no_tab_map = true
@@ -266,6 +265,71 @@ vim.keymap.set('i', '<F12>', 'copilot#Accept("")', {
     expr = true,
     replace_keycodes = false,
 })
+
+-- Agentic
+local agentic = require('agentic')
+agentic.setup({
+    provider = 'kiro-cli',
+    acp_providers = {
+        ['kiro-cli'] = {
+            name = 'Kiro',
+            command = vim.fn.expand('~/bin/kiro-acp-proxy'),
+            args = { '--trust-all-tools' },
+            env = {
+                HOME = vim.fn.getenv('HOME'),
+            },
+        },
+    },
+    windows = {
+        width = '30%',
+    },
+    headers = {
+        chat = { title = 'Chat' },
+        todos = { title = 'Todos' },
+        code = { title = 'Code' },
+        files = { title = 'Files' },
+        input = { title = 'Input' },
+        diagnostics = { title = 'Diagnostics' },
+    },
+    spinner_chars = {
+        generating = { '/', '-', '\\', '|' },
+        thinking = { '/', '-', '\\', '|' },
+        searching = { '   ', '.  ', '.. ', '...' },
+        busy = { '   ', '.  ', '.. ', '...' },
+    },
+    diagnostic_icons = {
+        error = '!!',
+        warn = '??',
+        info = '>>',
+        hint = '>>',
+    },
+    status_icons = {
+        pending = '-_-',
+        in_progress = '>_<',
+        completed = '^_^',
+        failed = 'T_T',
+    },
+    chat_icons = {
+        user = '',
+        agent = '',
+    },
+    message_icons = {
+        thinking = '>_<',
+        finished = '^_^',
+        stopped = '-_-',
+        error = 'T_T',
+    },
+})
+
+-- Force-replace spinner arrays; deep_merge_into merges by index so shorter
+-- user arrays leave leftover default braille chars at higher indices.
+local agentic_config = require('agentic.config')
+agentic_config.spinner_chars.generating = { '/', '-', '\\', '|' }
+agentic_config.spinner_chars.busy = { '   ', '.  ', '.. ', '...' }
+
+vim.api.nvim_create_user_command('Chat', function() agentic.toggle() end, {})
+vim.api.nvim_create_user_command('ChatStop', function() agentic.stop_generation() end, {})
+vim.api.nvim_create_user_command('ChatRestore', function() agentic.restore_session() end, {})
 
 -- Completion
 local cmp = require('cmp')
