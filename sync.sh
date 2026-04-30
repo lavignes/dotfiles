@@ -277,8 +277,13 @@ sync_vim() {
             git clone --depth 1 --branch "$nvim_tag" \
                 "https://github.com/neovim/neovim.git" "$workdir/neovim"
             cd "$workdir/neovim"
-            make -j CC="$HOME/.local/bin/gcc" CXX="$HOME/.local/bin/g++" \
-                CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local"
+            if [ "$os" = "yum" ]; then
+                make -j CC="$HOME/.local/bin/gcc" CXX="$HOME/.local/bin/g++" \
+                    CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local" \
+                    CMAKE_EXTRA_FLAGS="-DCMAKE_C_FLAGS='-mcmodel=medium'"
+            else
+                make -j CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local"
+            fi
             make install
             cd "$curdir"
         fi
