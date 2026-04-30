@@ -255,6 +255,9 @@ sync_vim() {
 
     if nvim_needs_update; then
         if confirm "I will now build and install neovim $nvim_tag."; then
+            rm -rf "$HOME/.local/bin/nvim" \
+                "$HOME/.local/lib/nvim" \
+                "$HOME/.local/share/nvim/runtime"
             git clone --depth 1 --branch "$nvim_tag" \
                 "https://github.com/neovim/neovim.git" "$workdir/neovim"
             cd "$workdir/neovim"
