@@ -247,7 +247,7 @@ sync_nvim_config() {
     fi
 }
 
-nvim_min_version="0.11.2"
+nvim_min_version="0.12.0"
 nvim_tag="v$nvim_min_version"
 
 nvim_needs_update() {
