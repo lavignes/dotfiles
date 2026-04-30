@@ -278,9 +278,9 @@ sync_vim() {
                 "https://github.com/neovim/neovim.git" "$workdir/neovim"
             cd "$workdir/neovim"
             if [ "$os" = "yum" ]; then
-                make -j CC="$HOME/.local/bin/gcc" CXX="$HOME/.local/bin/g++" \
-                    CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local" \
-                    CMAKE_EXTRA_FLAGS="-DCMAKE_C_FLAGS='-mcmodel=medium'"
+                CFLAGS="-mcmodel=medium" make -j \
+                    CC="$HOME/.local/bin/gcc" CXX="$HOME/.local/bin/g++" \
+                    CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local"
             else
                 make -j CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local"
             fi
