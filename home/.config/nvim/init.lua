@@ -8,6 +8,20 @@ vim.api.nvim_create_autocmd('PackChanged', {
             if name == 'nvim-treesitter' then
                 vim.cmd('TSUpdate')
             end
+            if name == 'agentic.nvim' then
+                local fl = event.data.path .. '/lua/agentic/ui/file_list.lua'
+                local f = io.open(fl, 'r')
+                if f then
+                    local src = f:read('*a')
+                    f:close()
+                    -- Strip U+EAEA nerd font icon (ef ab a9 in UTF-8... just kidding, ee ab a9)
+                    local patched = src:gsub('\xee\xab\xa9', '')
+                    if patched ~= src then
+                        f = io.open(fl, 'w')
+                        if f then f:write(patched); f:close() end
+                    end
+                end
+            end
         end
     end
 })
@@ -314,10 +328,10 @@ agentic.setup({
         hint = '>>',
     },
     status_icons = {
-        pending = '-_-',
-        in_progress = '>_<',
-        completed = '^_^',
-        failed = 'T_T',
+        pending = ':|',
+        in_progress = ':P',
+        completed = ':D',
+        failed = ':(',
     },
     chat_icons = {
         user = '[user]',
