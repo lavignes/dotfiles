@@ -281,8 +281,9 @@ sync_vim() {
                 printf '#!/bin/sh\nexec %s -mcmodel=medium "$@"\n' \
                     "$HOME/.local/bin/gcc" > "$workdir/gcc-wrapper"
                 chmod +x "$workdir/gcc-wrapper"
-                make -j CC="$workdir/gcc-wrapper" CXX="$HOME/.local/bin/g++" \
-                    CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local"
+                export CC="$workdir/gcc-wrapper"
+                export CXX="$HOME/.local/bin/g++"
+                make -j CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local"
             else
                 make -j CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local"
             fi
