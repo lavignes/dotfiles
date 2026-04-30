@@ -232,6 +232,19 @@ sync_nvim_config() {
     fi
 }
 
+nvim_min_version="0.11.2"
+nvim_tag="v$nvim_min_version"
+
+nvim_needs_update() {
+    if ! [ -x "$(command -v "nvim")" ]; then
+        return 0
+    fi
+    current="$(nvim --version | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+    printf '%s\n%s\n' "$nvim_min_version" "$current" | sort -V -C
+    # sort -V -C returns 0 if already sorted (current >= min), 1 otherwise
+    test $? -ne 0
+}
+
 sync_vim() {
     if [ "$os" = "apt" ]; then
         sudo apt-add-repository -y ppa:neovim-ppa/unstable
@@ -240,13 +253,16 @@ sync_vim() {
         sudo yum -y install clang-tools-extra
     fi
 
-    if ! [ -x "$(command -v "nvim")" ]; then
-        git clone --depth 1 "https://github.com/neovim/neovim.git" "$workdir/neovim"
-        cd "$workdir/neovim"
-        make -j CC="$HOME/.local/bin/gcc" CXX="$HOME/.local/bin/g++" \
-            CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local"
-        make install
-        cd "$curdir"
+    if nvim_needs_update; then
+        if confirm "I will now build and install neovim $nvim_tag."; then
+            git clone --depth 1 --branch "$nvim_tag" \
+                "https://github.com/neovim/neovim.git" "$workdir/neovim"
+            cd "$workdir/neovim"
+            make -j CC="$HOME/.local/bin/gcc" CXX="$HOME/.local/bin/g++" \
+                CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local"
+            make install
+            cd "$curdir"
+        fi
     fi
 
     require_command "nvim"
