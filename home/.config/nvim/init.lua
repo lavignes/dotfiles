@@ -301,14 +301,7 @@ agentic.setup({
         width = '30%',
     },
     headers = {
-        chat = function(parts)
-            parts.title = 'Chat'
-            local pct = vim.g.agentic_context_pct
-            if pct then
-                return string.format('%s | ctx: %.0f%%%%', parts.title, pct)
-            end
-            return parts.title
-        end,
+        chat = { title = 'Chat' },
         todos = { title = 'Todos' },
         code = { title = 'Code' },
         files = { title = 'Files' },
@@ -342,20 +335,6 @@ agentic.setup({
         finished = '[finished]',
         stopped = '[stopped]',
         error = '[error]',
-    },
-    hooks = {
-        on_session_update = function(data)
-            local pct = data.update and data.update.contextUsagePercentage
-            if pct then
-                vim.g.agentic_context_pct = pct
-                local reg = require('agentic.session_registry')
-                local session = reg.sessions[data.tab_page_id]
-                if session and session.widget and session.widget.buf_nrs then
-                    local WD = require('agentic.ui.window_decoration')
-                    WD.render_header(session.widget.buf_nrs.chat, 'chat')
-                end
-            end
-        end,
     },
 })
 
@@ -435,6 +414,38 @@ vim.lsp.config('jdtls', {
     },
 })
 vim.lsp.enable('jdtls')
+
+-- DAP
+local dap = require('dap')
+dap.adapters.java_dbg = function(callback)
+    local clients = vim.lsp.get_clients({ name = 'jdtls' })
+    if #clients == 0 then
+        vim.notify('jdtls not running', vim.log.levels.ERROR)
+        return
+    end
+    clients[1]:exec_cmd(
+        { command = 'vscode.java.startDebugSession' },
+        { bufnr = 0 },
+        function(err, port)
+            if err then
+                vim.notify('Debug session failed: ' .. tostring(err), vim.log.levels.ERROR)
+                return
+            end
+            callback({ type = 'server', host = '127.0.0.1', port = port })
+        end
+    )
+end
+dap.configurations.java = {
+    {
+        type = 'java_dbg',
+        request = 'attach',
+        name = 'Attach to localhost:9005',
+        hostName = '127.0.0.1',
+        port = 9005,
+    },
+}
+vim.api.nvim_set_hl(0, 'DapStoppedLine', { bg = '#3a3a00' })
+vim.fn.sign_define('DapStopped', { text = '→', texthl = 'DapStopped', linehl = 'DapStoppedLine' })
 
 -- TypeScript
 vim.lsp.config('ts_ls', {
