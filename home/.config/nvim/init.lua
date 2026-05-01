@@ -2,25 +2,8 @@ vim.api.nvim_create_autocmd('PackChanged', {
     callback = function(event)
         local name, kind = event.data.spec.name, event.data.kind
         if kind == 'install' or kind == 'update' then
-            if name == 'avante.nvim' then
-                vim.system({ 'make', 'BUILD_FROM_SOURCE=true' }, { cwd = event.data.path })
-            end
             if name == 'nvim-treesitter' then
                 vim.cmd('TSUpdate')
-            end
-            if name == 'agentic.nvim' then
-                local fl = event.data.path .. '/lua/agentic/ui/file_list.lua'
-                local f = io.open(fl, 'r')
-                if f then
-                    local src = f:read('*a')
-                    f:close()
-                    -- Strip U+EAEA nerd font icon (ef ab a9 in UTF-8... just kidding, ee ab a9)
-                    local patched = src:gsub('\xee\xab\xa9', '')
-                    if patched ~= src then
-                        f = io.open(fl, 'w')
-                        if f then f:write(patched); f:close() end
-                    end
-                end
             end
         end
     end
@@ -53,7 +36,6 @@ vim.pack.add({
     'https://github.com/nvim-treesitter/nvim-treesitter',
     'https://github.com/mfussenegger/nvim-dap',
     'https://github.com/soulis-1256/eagle.nvim',
-    'https://github.com/yetone/avante.nvim',
     'https://github.com/github/copilot.vim',
     'https://github.com/carlos-algms/agentic.nvim',
 
@@ -69,6 +51,18 @@ vim.pack.add({
 })
 
 vim.api.nvim_create_user_command('PackUpdate', function() vim.pack.update() end, {})
+vim.api.nvim_create_user_command('PackClean', function()
+    local inactive = vim.iter(vim.pack.get())
+        :filter(function(p) return not p.active end)
+        :map(function(p) return p.spec.name end)
+        :totable()
+    if #inactive == 0 then
+        vim.notify('PackClean: nothing to remove')
+        return
+    end
+    vim.pack.del(inactive)
+    vim.notify('PackClean: removed ' .. table.concat(inactive, ', '))
+end, {})
 vim.api.nvim_create_user_command('PackInfo', function()
     local packs = vim.inspect(vim.pack.get())
     vim.cmd('vnew')
@@ -82,9 +76,9 @@ vim.opt.clipboard = 'unnamedplus'
 vim.opt.termguicolors = true
 vim.opt.mousemoveevent = true
 vim.opt.wildmenu = true
-vim.opt.wildmode = {'longest', 'full'}
+vim.opt.wildmode = { 'longest', 'full' }
 vim.opt.modeline = true
-vim.opt.backspace = {'indent', 'eol', 'start'}
+vim.opt.backspace = { 'indent', 'eol', 'start' }
 vim.opt.number = true
 vim.opt.wrap = false
 vim.opt.colorcolumn = {80, 120}
@@ -220,56 +214,6 @@ vim.api.nvim_create_user_command('Rename', function() vim.lsp.buf.rename() end, 
 vim.api.nvim_create_user_command('Format', function() vim.lsp.buf.format() end, {})
 vim.api.nvim_create_user_command('Doc', function() vim.lsp.buf.hover() end, {})
 
-local avante_provider = vim.fn.executable('copilot') == 1 and 'copilotacp' or 'kiro'
-
-require('avante').setup({
-    behaviour = {
-        auto_approve_tool_permissions = true,
-        confirmation_ui_style = 'popup',
-    },
-    mode = 'agentic',
-    provider = avante_provider,
-    providers = {
-        bedrock = {
-            aws_profile = 'lavignes-bedrock-account',
-            aws_region = 'us-west-2',
-            model = 'anthropic.claude-3-5-sonnet-20241022-v2:0',
-        },
-    },
-    acp_providers = {
-        kiro = {
-            command = 'kiro-cli',
-            args = { 'acp' },
-            env = {
-                HOME = vim.fn.getenv('HOME'),
-            },
-        },
-        copilotacp = {
-            command = 'copilot',
-            args = { '--acp', '--allow-all-tools' },
-            env = {
-                HOME = vim.fn.getenv('HOME'),
-                COPILOT_GITHUB_TOKEN = vim.fn.getenv('COPILOT_GITHUB_TOKEN'),
-            },
-            auth_method = 'copilot-login',
-        },
-    },
-    windows = {
-        sidebar_header = { enabled = false },
-        spinner = {
-            editing = { '|', '/', '-', '\\' },
-            generating = { '|', '/', '-', '\\' },
-            thinking = { '|', '/', '-', '\\' },
-        },
-    },
-    selector = {
-        provider = 'telescope',
-    },
-    input = {
-        provider = 'snacks',
-    },
-})
-
 -- Copilot
 vim.g.copilot_enabled = false
 vim.g.copilot_no_tab_map = true
@@ -284,9 +228,11 @@ vim.keymap.set('i', '<F12>', 'copilot#Accept("")', {
 })
 
 -- Agentic
+local agentic_provider = vim.fn.executable('copilot') == 1 and 'copilotacp' or 'kiro-cli'
+
 local agentic = require('agentic')
 agentic.setup({
-    provider = 'kiro-cli',
+    provider = agentic_provider,
     acp_providers = {
         ['kiro-cli'] = {
             name = 'Kiro',
@@ -296,6 +242,15 @@ agentic.setup({
                 HOME = vim.fn.getenv('HOME'),
             },
         },
+        ['copilotacp'] = {
+            command = 'copilot',
+            args = { '--acp', '--allow-all-tools' },
+            env = {
+                HOME = vim.fn.getenv('HOME'),
+                COPILOT_GITHUB_TOKEN = vim.fn.getenv('COPILOT_GITHUB_TOKEN'),
+            },
+            auth_method = 'copilot-login',
+        }
     },
     windows = {
         width = '30%',

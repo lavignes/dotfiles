@@ -263,8 +263,7 @@ nvim_needs_update() {
 
 sync_vim() {
     if [ "$os" = "apt" ]; then
-        sudo apt-add-repository -y ppa:neovim-ppa/unstable
-        sudo apt -y install neovim clangd
+        sudo apt -y install clangd
     elif [ "$os" = "yum" ]; then
         sudo yum -y install clang-tools-extra
     fi
