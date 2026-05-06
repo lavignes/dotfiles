@@ -145,22 +145,31 @@ sync_gcc() {
 }
 
 sync_node() {
+    if [ "$os" = "yum" ]; then
+        if [ -x "$HOME/.local/bin/node" ]; then
+            return
+        fi
+        if confirm "I will now build and install nodejs from source."; then
+            git clone --depth 1 --branch v22.16.0 \
+                "https://github.com/nodejs/node.git" "$workdir/node"
+            cd "$workdir/node"
+            CC="$HOME/.local/bin/gcc" CXX="$HOME/.local/bin/g++" \
+                ./configure --prefix="$HOME/.local"
+            make -j
+            make install
+            cd "$curdir"
+        fi
+        return
+    fi
+
     if confirm "I will now install nvm and update to the latest nodejs."; then
         curl -sSL "https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh" | bash
         NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
         # shellcheck source=/dev/null
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-
-        if [ "$os" = "apt" ]; then
-            nvm install 24
-            nvm use 24
-            nvm alias default 24
-            return
-        fi
-
-        nvm install 16
-        nvm use 16
-        nvm alias default 16
+        nvm install 24
+        nvm use 24
+        nvm alias default 24
     fi
 }
 
