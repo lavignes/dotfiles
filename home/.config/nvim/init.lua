@@ -228,13 +228,29 @@ vim.keymap.set('i', '<F12>', 'copilot#Accept("")', {
 })
 
 -- Agentic
-local agentic_provider = vim.fn.executable('copilot') == 1 and 'copilotacp' or 'kiro-cli'
+local agentic_provider = (vim.fn.executable('copilot') == 1 and 'copilot-acp')
+    or (vim.fn.executable('claude-agent-acp') == 1 and 'claude-agent-acp')
+    or 'kiro-acp'
 
 local agentic = require('agentic')
 agentic.setup({
     provider = agentic_provider,
     acp_providers = {
-        ['kiro-cli'] = {
+        ['copilot-acp'] = {
+            command = 'copilot',
+            args = { '--acp', '--stdio', '--allow-all-tools' },
+            env = {
+                HOME = vim.fn.getenv('HOME'),
+                COPILOT_GITHUB_TOKEN = vim.fn.getenv('COPILOT_GITHUB_TOKEN'),
+            },
+        },
+        ['claude-agent-acp'] = {
+            command = 'claude-agent-acp',
+            env = {
+                HOME = vim.fn.getenv('HOME'),
+            },
+        },
+        ['kiro-acp'] = {
             name = 'Kiro',
             command = vim.fn.expand('~/bin/kiro-acp-proxy'),
             args = { '--trust-all-tools' },
@@ -242,15 +258,6 @@ agentic.setup({
                 HOME = vim.fn.getenv('HOME'),
             },
         },
-        ['copilotacp'] = {
-            command = 'copilot',
-            args = { '--acp', '--allow-all-tools' },
-            env = {
-                HOME = vim.fn.getenv('HOME'),
-                COPILOT_GITHUB_TOKEN = vim.fn.getenv('COPILOT_GITHUB_TOKEN'),
-            },
-            auth_method = 'copilot-login',
-        }
     },
     windows = {
         width = '30%',
