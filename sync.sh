@@ -4,6 +4,7 @@ set -e
 
 dotfiles_url="https://raw.githubusercontent.com/lavignes/dotfiles/mainline"
 workdir="$(mktemp -d)"
+trap 'rm -rf "$workdir"' EXIT
 curdir="$(pwd)"
 echo "The temp working directory will be $workdir"
 

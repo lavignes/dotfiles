@@ -26,6 +26,7 @@ vim.pack.add({
     'https://github.com/mg979/vim-visual-multi',
     'https://github.com/lewis6991/gitsigns.nvim',
     'https://github.com/ntpeters/vim-better-whitespace',
+    'https://github.com/MeanderingProgrammer/render-markdown.nvim',
 
     -- Telescope
     'https://github.com/nvim-telescope/telescope-fzf-native.nvim',
@@ -99,6 +100,11 @@ require('snacks').setup({
         ui_select = true,
         layout = { preset = 'select', layout = { width = 0.8 } },
     },
+})
+
+-- Markdown
+require('render-markdown').setup({
+    file_types = { 'markdown', 'AgenticChat' },
 })
 
 -- Tree
