@@ -121,7 +121,7 @@ sync_gcc() {
         mkdir build && cd build
         CC=gcc10-gcc CXX=gcc10-g++ ../configure --prefix="$HOME/.local" \
             --disable-gprofng --disable-gdb --disable-gdbserver
-        make -j
+        make -j4
         make install
         cd "$curdir"
 
@@ -138,7 +138,7 @@ sync_gcc() {
         mkdir build && cd build
         CC=gcc10-gcc CXX=gcc10-g++ ../configure --prefix="$HOME/.local" \
             --enable-languages=c,c++ --disable-multilib --disable-bootstrap
-        make -j
+        make -j4
         make install
         cd "$curdir"
     fi
@@ -155,7 +155,7 @@ sync_node() {
             cd "$workdir/node"
             CC="$HOME/.local/bin/gcc" CXX="$HOME/.local/bin/g++" \
                 ./configure --prefix="$HOME/.local"
-            make -j
+            make -j4
             make install
             cd "$curdir"
         fi
@@ -214,7 +214,7 @@ sync_cmake() {
             git clone --depth 1 "https://github.com/openssl/openssl.git" "$workdir/openssl"
             cd "$workdir/openssl"
             ./Configure --prefix="$HOME/.local"
-            make -j CC=gcc10-gcc
+            make -j4 CC=gcc10-gcc
             make install
             cd "$curdir"
         fi
@@ -224,7 +224,7 @@ sync_cmake() {
         git clone --depth 1 "https://github.com/Kitware/CMake.git" "$workdir/cmake"
         cd "$workdir/cmake"
         ./bootstrap --prefix="$HOME/.local" -- -DOPENSSL_ROOT_DIR="$HOME/.local"
-        make -j
+        make -j4
         make install
         cd "$curdir"
     fi
@@ -288,10 +288,10 @@ sync_vim() {
             if [ "$os" = "yum" ]; then
                 export CC="$HOME/.local/bin/gcc"
                 export CXX="$HOME/.local/bin/g++"
-                make -j CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local" \
+                make -j4 CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local" \
                     DEPS_CMAKE_FLAGS="-DUSE_BUNDLED_TS_PARSERS=OFF"
             else
-                make -j CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local"
+                make -j4 CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$HOME/.local"
             fi
             make install
             cd "$curdir"
