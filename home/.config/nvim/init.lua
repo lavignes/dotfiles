@@ -254,6 +254,7 @@ agentic.setup({
             command = 'claude-agent-acp',
             env = {
                 HOME = vim.fn.getenv('HOME'),
+                CLAUDE_CODE_EXECUTABLE = vim.fn.exepath('claude'),
             },
         },
         ['kiro-acp'] = {
