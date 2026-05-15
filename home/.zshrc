@@ -1,6 +1,11 @@
 # Put host-local stuff in ~/.zshlocal :-)
 [ -s "$HOME/.zshlocal" ] && \. "$HOME/.zshlocal"
 
+# Auto-attach to tmux on interactive login
+if [[ -z "$TMUX" && $- == *i* ]]; then
+    tmux attach -t $(tmux ls 2>/dev/null | grep -v attached | head -1 | cut -d: -f1) 2>/dev/null || tmux
+fi
+
 export PATH="$HOME/bin:$PATH"
 export PATH="/usr/local/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
@@ -17,6 +22,11 @@ bindkey "$terminfo[kcud1]" history-substring-search-down
 bindkey "^[[1;3C" forward-word
 bindkey "^[[1;3D" backward-word
 
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# Added by AIM CLI
+export PATH="/local/home/lavignes/.aim/mcp-servers:$PATH"
+
+# if you wish to use IMDS set AWS_EC2_METADATA_DISABLED=false
+
+export AWS_EC2_METADATA_DISABLED=true
+

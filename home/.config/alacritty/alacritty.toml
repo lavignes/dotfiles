@@ -5,8 +5,8 @@ live_config_reload = true
 TERM = "xterm-256color"
 
 [terminal.shell]
-args = ["-l", "-c", "tmux attach -t $(tmux ls | grep -v attached | head -1 | cut -d: -f1) || tmux"]
 program = "/bin/zsh"
+args = ["-l"]
 
 [window]
 option_as_alt = "Both"
@@ -17,6 +17,11 @@ resize_increments = true
 [window.dimensions]
 columns = 80
 lines = 24
+
+[[keyboard.bindings]]
+key = "T"
+mods = "Command"
+action = "None"
 
 [cursor.style]
 blinking = "Always"
