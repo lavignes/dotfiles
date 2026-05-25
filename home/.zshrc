@@ -22,11 +22,3 @@ bindkey "$terminfo[kcud1]" history-substring-search-down
 bindkey "^[[1;3C" forward-word
 bindkey "^[[1;3D" backward-word
 
-
-# Added by AIM CLI
-export PATH="/local/home/lavignes/.aim/mcp-servers:$PATH"
-
-# if you wish to use IMDS set AWS_EC2_METADATA_DISABLED=false
-
-export AWS_EC2_METADATA_DISABLED=true
-
