@@ -59,7 +59,7 @@ sync_git() {
 
     if confirm "I will now replace your git configuration."; then
         rm -f "$HOME/.gitconfig"
-        curl -sSLo "$HOME/.gitconfig" "$dotfiles_url/home/.gitconfig"
+        curl --progress-bar -SLo "$HOME/.gitconfig" "$dotfiles_url/home/.gitconfig"
     fi
 }
 
@@ -75,10 +75,10 @@ sync_shell() {
         rm -rf "$HOME/.oh-my-zsh"
         rm -f "$HOME/.zshrc"
 
-        curl -sSLo "$workdir/install.sh" "https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
+        curl --progress-bar -SLo "$workdir/install.sh" "https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
         chmod +x "$workdir/install.sh"
         "$workdir/install.sh" "" "--unattended"
-        curl -sSLo "$HOME/.zshrc" "$dotfiles_url/home/.zshrc"
+        curl --progress-bar -SLo "$HOME/.zshrc" "$dotfiles_url/home/.zshrc"
 
         if [ "$(basename "$SHELL")" != "zsh" ]; then
             echo "The current shell does not seem like zsh. I can fix that..."
@@ -96,7 +96,7 @@ sync_tmux() {
             sudo yum -y install tmux
         fi
         rm -f "$HOME/.tmux.conf"
-        curl -sSLo "$HOME/.tmux.conf" "$dotfiles_url/home/.tmux.conf"
+        curl --progress-bar -SLo "$HOME/.tmux.conf" "$dotfiles_url/home/.tmux.conf"
     fi
 }
 
@@ -164,7 +164,7 @@ sync_node() {
     fi
 
     if confirm "I will now install nvm and update to the latest nodejs."; then
-        curl -sSL "https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh" | bash
+        curl --progress-bar -SL "https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh" | bash
         NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
         # shellcheck source=/dev/null
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
@@ -176,7 +176,7 @@ sync_node() {
 
 sync_rust() {
     if confirm "I will now install rustup and cargo."; then
-        curl -sSL "https://sh.rustup.rs" | sh -s -- --no-modify-path -y
+        curl --progress-bar -SL "https://sh.rustup.rs" | sh -s -- --no-modify-path -y
     fi
 }
 
@@ -189,7 +189,7 @@ sync_alacritty() {
             sudo apt -y install alacritty
         fi
         rm -rf "$HOME/.config/alacritty"
-        curl -sSLo "$HOME/.config/alacritty/alacritty.toml" --create-dirs \
+        curl --progress-bar -SLo "$HOME/.config/alacritty/alacritty.toml" --create-dirs \
             "$dotfiles_url/home/.config/alacritty/alacritty.toml"
     fi
 }
@@ -252,7 +252,7 @@ sync_tree_sitter() {
 sync_nvim_config() {
     if confirm "I will now replace your vim configuration."; then
         rm -rf "$HOME/.config/nvim"
-        curl -sSLo "$HOME/.config/nvim/init.lua" --create-dirs \
+        curl --progress-bar -SLo "$HOME/.config/nvim/init.lua" --create-dirs \
             "$dotfiles_url/home/.config/nvim/init.lua"
     fi
 }
@@ -332,11 +332,11 @@ sync_fonts() {
         fi
         mkdir -p "$fonts_dir"
 
-        curl -sSLo "$workdir/PerfectDOSVGA437Win.tar.xz" --create-dirs \
+        curl --progress-bar -SLo "$workdir/PerfectDOSVGA437Win.tar.xz" --create-dirs \
             "$dotfiles_url/home/.local/share/fonts/PerfectDOSVGA437Win.tar.xz"
         tar xf "$workdir/PerfectDOSVGA437Win.tar.xz" -C "$fonts_dir"
 
-        curl -sSLo "$workdir/AcPlus_IBM_BIOS.tar.xz" --create-dirs \
+        curl --progress-bar -SLo "$workdir/AcPlus_IBM_BIOS.tar.xz" --create-dirs \
             "$dotfiles_url/home/.local/share/fonts/AcPlus_IBM_BIOS.tar.xz"
         tar xf "$workdir/AcPlus_IBM_BIOS.tar.xz" -C "$fonts_dir"
 
@@ -361,7 +361,7 @@ sync_bin() {
     if confirm "I will now replace your ~/bin scripts."; then
         set -- "ssh-tunnel" "modplay" "xsig" "kiro-acp-proxy"
         for f in "$@"; do
-            curl -sSLo "$HOME/bin/$f" --create-dirs "$dotfiles_url/home/bin/$f"
+            curl --progress-bar -SLo "$HOME/bin/$f" --create-dirs "$dotfiles_url/home/bin/$f"
             chmod +x "$HOME/bin/$f"
         done
     fi
@@ -370,7 +370,7 @@ sync_bin() {
 sync_gdb() {
     if confirm "I will now replace your gdb configuration."; then
         rm -f "$HOME/.gdbinit"
-        curl -sSLo "$HOME/.gdbinit" "$dotfiles_url/home/.gdbinit"
+        curl --progress-bar -SLo "$HOME/.gdbinit" "$dotfiles_url/home/.gdbinit"
     fi
 }
 
